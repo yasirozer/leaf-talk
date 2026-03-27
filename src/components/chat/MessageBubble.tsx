@@ -36,6 +36,27 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
     }
   };
 
+  const handleQuickBranch = (type: 'followup' | 'fork') => {
+    const content = message.content;
+    const preview = content.slice(0, 80) + (content.length > 80 ? '...' : '');
+
+    const branchId = store.createBranch(message.conversationId, {
+      sourceMessageId: message.id,
+      selectedText: preview,
+      startOffset: 0,
+      endOffset: content.length,
+    });
+
+    store.addMessage({
+      conversationId: message.conversationId,
+      branchId,
+      role: 'system',
+      content: type === 'followup'
+        ? `The user wants a follow-up on this assistant message:\n\n"${preview}"\n\nProvide a detailed follow-up.`
+        : `The user forked from this assistant message:\n\n"${preview}"\n\nContinue the conversation from this point.`,
+    });
+  };
+
   const handleTextSelection = useCallback(() => {
     if (isUser) return;
     const selection = window.getSelection();
