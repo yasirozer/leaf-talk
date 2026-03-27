@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Message, Branch } from '@/types';
 import { useConversationStore } from '@/store/conversation-store';
-import { GitBranch, Pencil, Copy, Check, User, Bot } from 'lucide-react';
+import { GitBranch, Pencil, Copy, Check, User, Bot, MessageSquare } from 'lucide-react';
 import { useState, useCallback, useRef } from 'react';
 
 interface MessageBubbleProps {
@@ -34,6 +34,27 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
       setEditContent(message.content);
       setEditing(true);
     }
+  };
+
+  const handleQuickBranch = (type: 'followup' | 'fork') => {
+    const content = message.content;
+    const preview = content.slice(0, 80) + (content.length > 80 ? '...' : '');
+
+    const branchId = store.createBranch(message.conversationId, {
+      sourceMessageId: message.id,
+      selectedText: preview,
+      startOffset: 0,
+      endOffset: content.length,
+    });
+
+    store.addMessage({
+      conversationId: message.conversationId,
+      branchId,
+      role: 'system',
+      content: type === 'followup'
+        ? `The user wants a follow-up on this assistant message:\n\n"${preview}"\n\nProvide a detailed follow-up.`
+        : `The user forked from this assistant message:\n\n"${preview}"\n\nContinue the conversation from this point.`,
+    });
   };
 
   const handleTextSelection = useCallback(() => {
@@ -108,12 +129,30 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
           {/* Hover actions */}
           {!editing && !message.isStreaming && (
             <div className="absolute -top-8 right-0 hidden group-hover:flex gap-1 surface-3 rounded-lg p-1 border border-border animate-fade-in">
-              <button onClick={handleCopy} className="p-1 rounded hover:bg-primary/10 transition-colors">
+              <button onClick={handleCopy} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Copy">
                 {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} className="text-dim" />}
               </button>
-              <button onClick={handleEdit} className="p-1 rounded hover:bg-primary/10 transition-colors">
+              <button onClick={handleEdit} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Edit">
                 <Pencil size={12} className="text-dim" />
               </button>
+              {!isUser && (
+                <>
+                  <button
+                    onClick={() => handleQuickBranch('followup')}
+                    className="p-1 rounded hover:bg-primary/10 transition-colors"
+                    title="Follow up"
+                  >
+                    <MessageSquare size={12} className="text-dim" />
+                  </button>
+                  <button
+                    onClick={() => handleQuickBranch('fork')}
+                    className="p-1 rounded hover:bg-primary/10 transition-colors"
+                    title="Fork"
+                  >
+                    <GitBranch size={12} className="text-dim" />
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
