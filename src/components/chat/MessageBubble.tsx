@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Message, Branch } from '@/types';
 import { useConversationStore } from '@/store/conversation-store';
-import { GitBranch, Pencil, Copy, Check, User, Bot } from 'lucide-react';
+import { GitBranch, Pencil, Copy, Check, User, Bot, MessageSquare } from 'lucide-react';
 import { useState, useCallback, useRef } from 'react';
 
 interface MessageBubbleProps {
