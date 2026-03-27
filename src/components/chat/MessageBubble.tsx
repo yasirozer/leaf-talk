@@ -108,12 +108,30 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
           {/* Hover actions */}
           {!editing && !message.isStreaming && (
             <div className="absolute -top-8 right-0 hidden group-hover:flex gap-1 surface-3 rounded-lg p-1 border border-border animate-fade-in">
-              <button onClick={handleCopy} className="p-1 rounded hover:bg-primary/10 transition-colors">
+              <button onClick={handleCopy} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Copy">
                 {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} className="text-dim" />}
               </button>
-              <button onClick={handleEdit} className="p-1 rounded hover:bg-primary/10 transition-colors">
+              <button onClick={handleEdit} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Edit">
                 <Pencil size={12} className="text-dim" />
               </button>
+              {!isUser && (
+                <>
+                  <button
+                    onClick={() => handleQuickBranch('followup')}
+                    className="p-1 rounded hover:bg-primary/10 transition-colors"
+                    title="Follow up"
+                  >
+                    <MessageSquare size={12} className="text-dim" />
+                  </button>
+                  <button
+                    onClick={() => handleQuickBranch('fork')}
+                    className="p-1 rounded hover:bg-primary/10 transition-colors"
+                    title="Fork"
+                  >
+                    <GitBranch size={12} className="text-dim" />
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
