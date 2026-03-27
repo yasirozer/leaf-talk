@@ -147,15 +147,53 @@ export async function streamCompletion(
   model: string,
   messages: Message[],
   callbacks: StreamCallbacks,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  customBaseUrl?: string
 ) {
   try {
     switch (provider) {
       case 'openai': return streamOpenAI(apiKey, model, messages, callbacks, signal);
       case 'anthropic': return streamAnthropic(apiKey, model, messages, callbacks, signal);
       case 'google': return streamGoogle(apiKey, model, messages, callbacks, signal);
+      case 'custom': {
+        if (!customBaseUrl) { callbacks.onError('Custom base URL is required'); return; }
+        return streamCustomOpenAI(apiKey, model, messages, callbacks, signal, customBaseUrl);
+      }
     }
   } catch (e: any) {
     if (e.name !== 'AbortError') callbacks.onError(e.message);
   }
+}
+
+async function streamCustomOpenAI(apiKey: string, model: string, messages: Message[], cb: StreamCallbacks, signal?: AbortSignal, baseUrl?: string) {
+  const url = baseUrl!.replace(/\/+$/, '') + '/chat/completions';
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model, messages: messagesToOpenAIFormat(messages), stream: true }),
+    signal,
+  });
+  if (!resp.ok) { cb.onError(`API error: ${resp.status}`); return; }
+  const reader = resp.body!.getReader();
+  const decoder = new TextDecoder();
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    let nl: number;
+    while ((nl = buf.indexOf('\n')) !== -1) {
+      const line = buf.slice(0, nl).trim();
+      buf = buf.slice(nl + 1);
+      if (!line.startsWith('data: ')) continue;
+      const json = line.slice(6);
+      if (json === '[DONE]') { cb.onDone(); return; }
+      try {
+        const parsed = JSON.parse(json);
+        const content = parsed.choices?.[0]?.delta?.content;
+        if (content) cb.onToken(content);
+      } catch {}
+    }
+  }
+  cb.onDone();
 }
