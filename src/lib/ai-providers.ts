@@ -10,6 +10,7 @@ const PROVIDER_URLS: Record<Provider, string> = {
   openai: 'https://api.openai.com/v1/chat/completions',
   anthropic: 'https://api.anthropic.com/v1/messages',
   google: 'https://generativelanguage.googleapis.com/v1beta/models/',
+  custom: '',
 };
 
 function messagesToOpenAIFormat(messages: Message[]) {
