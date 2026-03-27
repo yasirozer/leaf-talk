@@ -1,11 +1,13 @@
 export type Role = 'user' | 'assistant' | 'system';
 
-export type Provider = 'openai' | 'anthropic' | 'google';
+export type Provider = 'openai' | 'anthropic' | 'google' | 'custom';
 
 export interface ProviderSettings {
   provider: Provider;
   apiKey: string;
   model: string;
+  customBaseUrl?: string;
+  customModelId?: string;
 }
 
 export interface Message {
