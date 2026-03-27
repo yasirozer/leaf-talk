@@ -90,9 +90,18 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
             <div
               ref={contentRef}
               onMouseUp={handleTextSelection}
-              className={`prose-chat text-sm ${message.isStreaming ? 'animate-pulse' : ''}`}
+              className="prose-chat text-sm"
             >
-              <ReactMarkdown>{message.content || (message.isStreaming ? '...' : '')}</ReactMarkdown>
+              {message.isStreaming && !message.content ? (
+                <div className="flex items-center gap-1.5 py-1">
+                  <span className="text-xs text-dim mr-1">Thinking</span>
+                  <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
+                  <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
+                  <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
+                </div>
+              ) : (
+                <ReactMarkdown>{message.content || ''}</ReactMarkdown>
+              )}
             </div>
           )}
 

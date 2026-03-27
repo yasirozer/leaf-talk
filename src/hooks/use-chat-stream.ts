@@ -48,7 +48,8 @@ export function useChatStream(branchId?: string) {
           setIsLoading(false);
         },
       },
-      abortRef.current.signal
+      abortRef.current.signal,
+      providerSettings.customBaseUrl
     );
   }, [branchId]);
 

@@ -31,8 +31,8 @@ export function TopBar() {
         ))}
       </div>
       <div className="flex items-center gap-2 text-[10px] text-dim">
-        <span className="px-2 py-1 rounded-md surface-2 border border-border">
-          {PROVIDER_LABELS[provider]} · {model}
+        <span className="px-2 py-1 rounded-md surface-2 border border-border font-mono truncate max-w-[200px]">
+          {PROVIDER_LABELS[provider]} · {model || 'no model'}
         </span>
       </div>
     </div>
