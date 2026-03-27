@@ -152,12 +152,13 @@ export async function streamCompletion(
 ) {
   try {
     switch (provider) {
-      case 'openai': return streamOpenAI(apiKey, model, messages, callbacks, signal);
-      case 'anthropic': return streamAnthropic(apiKey, model, messages, callbacks, signal);
-      case 'google': return streamGoogle(apiKey, model, messages, callbacks, signal);
+      case 'openai': await streamOpenAI(apiKey, model, messages, callbacks, signal); break;
+      case 'anthropic': await streamAnthropic(apiKey, model, messages, callbacks, signal); break;
+      case 'google': await streamGoogle(apiKey, model, messages, callbacks, signal); break;
       case 'custom': {
         if (!customBaseUrl) { callbacks.onError('Custom base URL is required'); return; }
-        return streamCustomOpenAI(apiKey, model, messages, callbacks, signal, customBaseUrl);
+        await streamCustomOpenAI(apiKey, model, messages, callbacks, signal, customBaseUrl);
+        break;
       }
     }
   } catch (e: any) {
