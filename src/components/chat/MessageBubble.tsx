@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Message, Branch } from '@/types';
 import { useConversationStore } from '@/store/conversation-store';
 import { GitBranch, Pencil, Copy, Check, User, Bot, MessageSquare } from 'lucide-react';
+import { CodeBlock } from './CodeBlock';
 import { useState, useCallback, useRef } from 'react';
 
 interface MessageBubbleProps {
@@ -121,7 +122,22 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
                   <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
                 </div>
               ) : (
-                <ReactMarkdown>{message.content || ''}</ReactMarkdown>
+                <ReactMarkdown
+                  components={{
+                    code({ className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || '');
+                      const codeString = String(children).replace(/\n$/, '');
+                      if (match && codeString.includes('\n')) {
+                        return <CodeBlock language={match[1]}>{codeString}</CodeBlock>;
+                      }
+                      return (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
+                >{message.content || ''}</ReactMarkdown>
               )}
             </div>
           )}
