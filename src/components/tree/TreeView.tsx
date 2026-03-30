@@ -182,11 +182,6 @@ export function TreeView() {
       >
         <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="hsl(220, 14%, 15%)" />
         <Controls />
-        <MiniMap
-          nodeColor={(node) => node.data?.isBranch ? 'hsl(142, 60%, 40%)' : 'hsl(220, 14%, 40%)'}
-          maskColor="hsl(220, 14%, 8%, 0.8)"
-          className="!bg-background !border-border"
-        />
       </ReactFlow>
     </div>
   );
