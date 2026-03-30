@@ -10,6 +10,7 @@ import {
   BackgroundVariant,
   Handle,
   Position,
+  MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useConversationStore } from '@/store/conversation-store';
@@ -17,7 +18,7 @@ import { GitBranch, MessageSquare } from 'lucide-react';
 
 function MessageNode({ data }: { data: any }) {
   return (
-    <div className={`px-3 py-2 rounded-lg border max-w-[220px] ${data.isBranch ? 'border-primary/40 bg-primary/10' : 'border-border surface-2'}`}>
+    <div className={`px-3 py-2 rounded-lg border max-w-[220px] shadow-md cursor-grab active:cursor-grabbing ${data.isBranch ? 'border-primary/40 bg-primary/10' : 'border-border surface-2'}`}>
       <Handle type="target" position={Position.Top} className="!bg-primary !w-2 !h-2" />
       <div className="flex items-center gap-1.5 mb-1">
         {data.isBranch ? <GitBranch size={10} className="text-primary" /> : <MessageSquare size={10} className="text-dim" />}
@@ -31,6 +32,11 @@ function MessageNode({ data }: { data: any }) {
 
 const nodeTypes = { messageNode: MessageNode };
 
+const NODE_WIDTH = 240;
+const NODE_HEIGHT_GAP = 90;
+const BRANCH_X_GAP = 280;
+const MAIN_X = 100;
+
 export function TreeView() {
   const store = useConversationStore();
   const convId = store.activeConversationId;
@@ -40,40 +46,60 @@ export function TreeView() {
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
-
-    // Track all node IDs for linking
-    // Map: messageId -> nodeId in the graph
     const msgIdToNodeId = new Map<string, string>();
+    // Track each node's position for child branch placement
+    const nodePositions = new Map<string, { x: number; y: number }>();
+    // Track how many branches have been placed from each source node to fan them out
+    const sourceBranchCount = new Map<string, number>();
+    // Track the rightmost x used at each "column depth" to avoid overlaps
+    let globalMaxX = MAIN_X;
 
     // Main conversation nodes
     messages.forEach((msg, i) => {
+      const pos = { x: MAIN_X, y: i * NODE_HEIGHT_GAP };
       nodes.push({
         id: msg.id,
         type: 'messageNode',
-        position: { x: 300, y: i * 100 },
+        position: pos,
         data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: false },
       });
       msgIdToNodeId.set(msg.id, msg.id);
+      nodePositions.set(msg.id, pos);
       if (i > 0) {
-        edges.push({ id: `e-${messages[i-1].id}-${msg.id}`, source: messages[i-1].id, target: msg.id, style: { stroke: 'hsl(220, 14%, 25%)' } });
+        edges.push({
+          id: `e-${messages[i - 1].id}-${msg.id}`,
+          source: messages[i - 1].id,
+          target: msg.id,
+          style: { stroke: 'hsl(220, 14%, 25%)' },
+        });
       }
     });
 
-    // Recursive function to render a branch and its sub-branches
-    const renderBranch = (branch: typeof allBranches[0], columnIndex: number, depth: number) => {
+    // Sort branches by creation time so parents are processed before children
+    const sortedBranches = [...allBranches].sort((a, b) => a.createdAt - b.createdAt);
+
+    for (const branch of sortedBranches) {
       const sourceNodeId = msgIdToNodeId.get(branch.anchor.sourceMessageId);
-      // Find source position
-      const sourceNode = nodes.find(n => n.id === sourceNodeId);
-      const sourceY = sourceNode ? sourceNode.position.y : 0;
-      const xOffset = 300 + (columnIndex + 1) * 280;
+      const sourcePos = sourceNodeId ? nodePositions.get(sourceNodeId) : null;
+      const sourceY = sourcePos ? sourcePos.y : 0;
+      const sourceX = sourcePos ? sourcePos.x : MAIN_X;
+
+      // Count how many branches already come from this source to fan them out
+      const countFromSource = sourceBranchCount.get(branch.anchor.sourceMessageId) || 0;
+      sourceBranchCount.set(branch.anchor.sourceMessageId, countFromSource + 1);
+
+      // Place branch to the right of the source, staggered if multiple from same source
+      const xOffset = Math.max(sourceX + BRANCH_X_GAP, globalMaxX + BRANCH_X_GAP) + countFromSource * BRANCH_X_GAP;
 
       const branchNodeId = `branch-${branch.id}`;
+      const branchPos = { x: xOffset, y: sourceY + 50 };
       nodes.push({
         id: branchNodeId,
         type: 'messageNode',
-        position: { x: xOffset, y: sourceY + 50 },
+        position: branchPos,
         data: { role: 'branch', content: branch.title, isBranch: true },
       });
+      nodePositions.set(branchNodeId, branchPos);
 
       if (sourceNodeId) {
         edges.push({
@@ -89,14 +115,19 @@ export function TreeView() {
       const branchMsgs = store.getBranchMessages(branch.id).filter(m => m.role !== 'system');
       branchMsgs.forEach((msg, j) => {
         const bMsgId = `bmsg-${msg.id}`;
+        const msgPos = { x: xOffset, y: sourceY + 50 + (j + 1) * NODE_HEIGHT_GAP };
         nodes.push({
           id: bMsgId,
           type: 'messageNode',
-          position: { x: xOffset, y: sourceY + 50 + (j + 1) * 80 },
+          position: msgPos,
           data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: true },
         });
         msgIdToNodeId.set(msg.id, bMsgId);
-        const prevId = j === 0 ? branchNodeId : `bmsg-${branchMsgs[j-1].id}`;
+        nodePositions.set(bMsgId, msgPos);
+        // Also store with original msg.id for sub-branch lookup
+        nodePositions.set(msg.id, msgPos);
+
+        const prevId = j === 0 ? branchNodeId : `bmsg-${branchMsgs[j - 1].id}`;
         edges.push({
           id: `e-${prevId}-${bMsgId}`,
           source: prevId,
@@ -105,18 +136,8 @@ export function TreeView() {
         });
       });
 
-      return branchMsgs;
-    };
-
-    // Build branches level by level to handle nesting
-    // First, render all branches, tracking column index
-    let colIdx = 0;
-    // Sort branches by creation time to process parents before children
-    const sortedBranches = [...allBranches].sort((a, b) => a.createdAt - b.createdAt);
-    
-    for (const branch of sortedBranches) {
-      renderBranch(branch, colIdx, 0);
-      colIdx++;
+      // Update globalMaxX to prevent future branches from overlapping
+      globalMaxX = Math.max(globalMaxX, xOffset);
     }
 
     return { nodes, edges };
@@ -155,11 +176,17 @@ export function TreeView() {
         onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
         nodeTypes={nodeTypes}
+        nodesDraggable
         fitView
         proOptions={{ hideAttribution: true }}
       >
         <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="hsl(220, 14%, 15%)" />
         <Controls />
+        <MiniMap
+          nodeColor={(node) => node.data?.isBranch ? 'hsl(142, 60%, 40%)' : 'hsl(220, 14%, 40%)'}
+          maskColor="hsl(220, 14%, 8%, 0.8)"
+          className="!bg-background !border-border"
+        />
       </ReactFlow>
     </div>
   );
