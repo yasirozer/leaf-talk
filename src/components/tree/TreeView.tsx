@@ -143,13 +143,18 @@ export function TreeView() {
     return { nodes, edges };
   }, [messages, allBranches, store]);
 
+  const prevDataRef = useRef<string>('');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+    const dataKey = JSON.stringify({ m: messages.map(m => m.id), b: allBranches.map(b => b.id) });
+    if (dataKey !== prevDataRef.current) {
+      prevDataRef.current = dataKey;
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, [initialNodes, initialEdges, setNodes, setEdges, messages, allBranches]);
 
   const onNodeClick = useCallback((_: any, node: Node) => {
     if (node.id.startsWith('branch-')) {
