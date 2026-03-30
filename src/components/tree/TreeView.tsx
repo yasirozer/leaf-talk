@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -10,7 +10,6 @@ import {
   BackgroundVariant,
   Handle,
   Position,
-  MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useConversationStore } from '@/store/conversation-store';
@@ -143,13 +142,18 @@ export function TreeView() {
     return { nodes, edges };
   }, [messages, allBranches, store]);
 
+  const prevDataRef = useRef<string>('');
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+    const dataKey = JSON.stringify({ m: messages.map(m => m.id), b: allBranches.map(b => b.id) });
+    if (dataKey !== prevDataRef.current) {
+      prevDataRef.current = dataKey;
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, [initialNodes, initialEdges, setNodes, setEdges, messages, allBranches]);
 
   const onNodeClick = useCallback((_: any, node: Node) => {
     if (node.id.startsWith('branch-')) {
@@ -182,11 +186,6 @@ export function TreeView() {
       >
         <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="hsl(220, 14%, 15%)" />
         <Controls />
-        <MiniMap
-          nodeColor={(node) => node.data?.isBranch ? 'hsl(142, 60%, 40%)' : 'hsl(220, 14%, 40%)'}
-          maskColor="hsl(220, 14%, 8%, 0.8)"
-          className="!bg-background !border-border"
-        />
       </ReactFlow>
     </div>
   );
