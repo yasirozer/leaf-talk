@@ -27,7 +27,7 @@ export function BranchPanel() {
   };
 
   return (
-    <div className="w-[420px] border-l border-border flex flex-col animate-slide-in-right surface-1">
+    <div className="h-full flex flex-col surface-1">
       {/* Header */}
       <div className="p-3 border-b border-border flex items-center gap-2">
         <GitBranch size={14} className="text-primary flex-shrink-0" />
