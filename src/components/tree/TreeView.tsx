@@ -10,7 +10,6 @@ import {
   BackgroundVariant,
   Handle,
   Position,
-  MiniMap,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useConversationStore } from '@/store/conversation-store';
