@@ -35,11 +35,15 @@ export function TreeView() {
   const store = useConversationStore();
   const convId = store.activeConversationId;
   const messages = convId ? store.getConversationMessages(convId) : [];
-  const branches = convId ? store.getConversationBranches(convId) : [];
+  const allBranches = convId ? store.getConversationBranches(convId) : [];
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
+
+    // Track all node IDs for linking
+    // Map: messageId -> nodeId in the graph
+    const msgIdToNodeId = new Map<string, string>();
 
     // Main conversation nodes
     messages.forEach((msg, i) => {
@@ -49,25 +53,32 @@ export function TreeView() {
         position: { x: 300, y: i * 100 },
         data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: false },
       });
+      msgIdToNodeId.set(msg.id, msg.id);
       if (i > 0) {
         edges.push({ id: `e-${messages[i-1].id}-${msg.id}`, source: messages[i-1].id, target: msg.id, style: { stroke: 'hsl(220, 14%, 25%)' } });
       }
     });
 
-    // Branch nodes
-    branches.forEach((branch, bi) => {
-      const sourceIdx = messages.findIndex(m => m.id === branch.anchor.sourceMessageId);
+    // Recursive function to render a branch and its sub-branches
+    const renderBranch = (branch: typeof allBranches[0], columnIndex: number, depth: number) => {
+      const sourceNodeId = msgIdToNodeId.get(branch.anchor.sourceMessageId);
+      // Find source position
+      const sourceNode = nodes.find(n => n.id === sourceNodeId);
+      const sourceY = sourceNode ? sourceNode.position.y : 0;
+      const xOffset = 300 + (columnIndex + 1) * 280;
+
       const branchNodeId = `branch-${branch.id}`;
       nodes.push({
         id: branchNodeId,
         type: 'messageNode',
-        position: { x: 600 + bi * 260, y: (sourceIdx >= 0 ? sourceIdx : 0) * 100 + 50 },
+        position: { x: xOffset, y: sourceY + 50 },
         data: { role: 'branch', content: branch.title, isBranch: true },
       });
-      if (branch.anchor.sourceMessageId) {
+
+      if (sourceNodeId) {
         edges.push({
-          id: `e-${branch.anchor.sourceMessageId}-${branchNodeId}`,
-          source: branch.anchor.sourceMessageId,
+          id: `e-${sourceNodeId}-${branchNodeId}`,
+          source: sourceNodeId,
           target: branchNodeId,
           style: { stroke: 'hsl(142, 60%, 50%)', strokeDasharray: '5,5' },
           animated: true,
@@ -81,9 +92,10 @@ export function TreeView() {
         nodes.push({
           id: bMsgId,
           type: 'messageNode',
-          position: { x: 600 + bi * 260, y: (sourceIdx >= 0 ? sourceIdx : 0) * 100 + 50 + (j + 1) * 80 },
+          position: { x: xOffset, y: sourceY + 50 + (j + 1) * 80 },
           data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: true },
         });
+        msgIdToNodeId.set(msg.id, bMsgId);
         const prevId = j === 0 ? branchNodeId : `bmsg-${branchMsgs[j-1].id}`;
         edges.push({
           id: `e-${prevId}-${bMsgId}`,
@@ -92,10 +104,23 @@ export function TreeView() {
           style: { stroke: 'hsl(142, 60%, 40%)' },
         });
       });
-    });
+
+      return branchMsgs;
+    };
+
+    // Build branches level by level to handle nesting
+    // First, render all branches, tracking column index
+    let colIdx = 0;
+    // Sort branches by creation time to process parents before children
+    const sortedBranches = [...allBranches].sort((a, b) => a.createdAt - b.createdAt);
+    
+    for (const branch of sortedBranches) {
+      renderBranch(branch, colIdx, 0);
+      colIdx++;
+    }
 
     return { nodes, edges };
-  }, [messages, branches, store]);
+  }, [messages, allBranches, store]);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
