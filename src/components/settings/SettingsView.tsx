@@ -1,14 +1,6 @@
 import { useConversationStore } from '@/store/conversation-store';
 import { Provider, PROVIDER_MODELS, PROVIDER_LABELS } from '@/types';
-import { Key, Cpu, Globe, Tag, ExternalLink, Sparkles } from 'lucide-react';
-
-const POPULAR_MODELS = [
-  { id: 'google/gemini-2.5-flash-preview-05-20', label: 'Gemini 2.5 Flash' },
-  { id: 'deepseek/deepseek-r1-0528', label: 'DeepSeek R1' },
-  { id: 'google/gemma-3-27b-it', label: 'Gemma 3 27B' },
-  { id: 'mistralai/devstral-small', label: 'Devstral Small' },
-  { id: 'qwen/qwen3-235b-a22b', label: 'Qwen3 235B' },
-];
+import { Key, Cpu, Globe, Tag, ExternalLink } from 'lucide-react';
 
 export function SettingsView() {
   const store = useConversationStore();
