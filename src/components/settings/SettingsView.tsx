@@ -83,7 +83,7 @@ export function SettingsView() {
             {/* Popular Models */}
             <div className="space-y-2">
               <p className="flex items-center gap-1.5 text-[11px] text-dim font-medium">
-                <Sparkles size={12} className="text-primary" /> Popular Models
+                <Sparkles size={12} className="text-primary" /> Free Models (OpenRouter)
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {POPULAR_MODELS.map(m => (
