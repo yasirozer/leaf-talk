@@ -1,37 +1,29 @@
 
 
-## Problem Diagnosis
+## Settings: Model Seçimi Geliştirmesi
 
-**This is a frontend rendering issue, not an API issue.** The AI providers return markdown with code blocks (````java ... ````) correctly. The problem is that `react-markdown` is rendering code blocks as plain `<code>` elements without any syntax highlighting library. There's no `rehype-highlight`, `react-syntax-highlighter`, or similar package installed.
+Custom provider seçildiğinde Model ID alanına iki ek özellik ekliyoruz: popüler modeller listesi ve OpenRouter'a kısayol link.
 
-The screenshot shows properly syntax-highlighted code (keywords in purple, strings in green, comments in gray, etc.) -- this requires a code highlighting library on the frontend side.
+### 1. Popüler Modeller Listesi
+Model ID input'unun altına tıklanabilir popüler model butonları ekle. Hardcoded bir liste (haftalık güncelleme gerektirmemesi için en çok kullanılan modeller):
 
-## Plan
+- `anthropic/claude-sonnet-4-20250514`
+- `openai/gpt-4o`
+- `google/gemini-2.5-pro`
+- `deepseek/deepseek-r1`
+- `meta-llama/llama-4-maverick`
 
-### 1. Install `react-syntax-highlighter`
-Add `react-syntax-highlighter` and its types as dependencies. This is the most popular solution for use with `react-markdown`.
+Butona tıklayınca `customModelId` ve `model` otomatik dolar.
 
-### 2. Create a custom code component for ReactMarkdown
-In `MessageBubble.tsx`, pass a `components` prop to `<ReactMarkdown>` with a custom `code` renderer that:
-- Detects if it's a fenced code block (has `className` like `language-java`)
-- Renders it with `SyntaxHighlighter` using a dark theme (e.g., `oneDark` or `vscDarkPlus`)
-- Falls back to inline `<code>` styling for inline code spans
+### 2. OpenRouter Kısayolu
+Popüler modellerin altına "Browse all models on OpenRouter" linki ekle (ExternalLink ikonu ile). Yeni sekmede `https://openrouter.ai/models` açılır.
 
-### 3. Style the code blocks
-- Dark background with rounded corners and padding
-- Copy button on hover for code blocks
-- Language label in the top-right corner
-- Consistent with the app's dark premium theme
+### Değişiklikler
 
-### Technical Details
-```text
-ReactMarkdown
-  └─ components={{ code: CustomCodeBlock }}
-       └─ if block code → <SyntaxHighlighter style={oneDark} language={lang}>
-       └─ if inline code → <code className="bg-surface px-1 rounded">
-```
+**`src/components/settings/SettingsView.tsx`**
+- Custom Model ID bölümüne popüler model chip'leri ekle (tıklanınca model ID'yi set eder)
+- Altına OpenRouter dış link butonu ekle
+- `ExternalLink` ve `Sparkles` ikonlarını import et
 
-Files to modify:
-- `package.json` — add `react-syntax-highlighter`, `@types/react-syntax-highlighter`
-- `src/components/chat/MessageBubble.tsx` — add custom code renderer to `<ReactMarkdown>`
+Tek dosya değişikliği, ek paket yok.
 
