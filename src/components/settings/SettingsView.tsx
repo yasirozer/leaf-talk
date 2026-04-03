@@ -3,11 +3,11 @@ import { Provider, PROVIDER_MODELS, PROVIDER_LABELS } from '@/types';
 import { Key, Cpu, Globe, Tag, ExternalLink, Sparkles } from 'lucide-react';
 
 const POPULAR_MODELS = [
-  { id: 'anthropic/claude-sonnet-4-20250514', label: 'Claude Sonnet 4' },
-  { id: 'openai/gpt-4o', label: 'GPT-4o' },
-  { id: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
-  { id: 'deepseek/deepseek-r1', label: 'DeepSeek R1' },
-  { id: 'meta-llama/llama-4-maverick', label: 'Llama 4 Maverick' },
+  { id: 'google/gemini-2.5-flash-preview-05-20', label: 'Gemini 2.5 Flash' },
+  { id: 'deepseek/deepseek-r1-0528', label: 'DeepSeek R1' },
+  { id: 'google/gemma-3-27b-it', label: 'Gemma 3 27B' },
+  { id: 'mistralai/devstral-small', label: 'Devstral Small' },
+  { id: 'qwen/qwen3-235b-a22b', label: 'Qwen3 235B' },
 ];
 
 export function SettingsView() {
@@ -83,7 +83,7 @@ export function SettingsView() {
             {/* Popular Models */}
             <div className="space-y-2">
               <p className="flex items-center gap-1.5 text-[11px] text-dim font-medium">
-                <Sparkles size={12} className="text-primary" /> Popular Models
+                <Sparkles size={12} className="text-primary" /> Free Models (OpenRouter)
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {POPULAR_MODELS.map(m => (
