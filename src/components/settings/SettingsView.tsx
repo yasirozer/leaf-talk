@@ -72,35 +72,14 @@ export function SettingsView() {
               className="w-full px-3 py-2.5 rounded-lg surface-2 border border-border text-sm font-mono focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-dim"
             />
 
-            {/* Popular Models */}
-            <div className="space-y-2">
-              <p className="flex items-center gap-1.5 text-[11px] text-dim font-medium">
-                <Sparkles size={12} className="text-primary" /> Free Models (OpenRouter)
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {POPULAR_MODELS.map(m => (
-                  <button
-                    key={m.id}
-                    onClick={() => store.setProviderSettings({ customModelId: m.id, model: m.id })}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-mono border transition-all ${
-                      customModelId === m.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border surface-2 text-dim hover:text-foreground hover:border-primary/40'
-                    }`}
-                  >
-                    {m.label}
-                  </button>
-                ))}
-              </div>
-              <a
-                href="https://openrouter.ai/models"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[11px] text-primary hover:underline mt-1"
-              >
-                <ExternalLink size={11} /> Browse all models on OpenRouter
-              </a>
-            </div>
+            <a
+              href="https://openrouter.ai/models"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[11px] text-primary hover:underline"
+            >
+              <ExternalLink size={11} /> Browse all models on OpenRouter
+            </a>
 
             <p className="text-[10px] text-dim">The model identifier as required by your provider.</p>
           </div>
