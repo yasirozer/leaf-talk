@@ -9,29 +9,29 @@ export function TopBar() {
   const tabs = [
     { id: 'chat' as const, icon: MessageSquare, label: 'Chat' },
     { id: 'tree' as const, icon: Network, label: 'Tree' },
-    { id: 'settings' as const, icon: Settings, label: 'Settings' },
+    { id: 'settings' as const, icon: Settings, label: 'Config' },
   ];
 
   return (
-    <div className="h-12 surface-2 border-b border-border flex items-center justify-between px-4">
-      <div className="flex items-center gap-1">
+    <div className="h-11 surface-2 border-b border-border flex items-center justify-between px-4">
+      <div className="flex items-center gap-0">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => store.setActiveView(tab.id)}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold tracking-wide transition-all ${
+            className={`flex items-center gap-1.5 px-5 py-2.5 text-[11px] font-bold tracking-[0.1em] uppercase transition-all border-b-2 ${
               store.activeView === tab.id
-                ? 'bg-primary/10 text-primary border-b-2 border-primary'
-                : 'text-dim hover:text-foreground'
+                ? 'border-b-primary text-neon bg-primary/5'
+                : 'border-b-transparent text-dim hover:text-foreground'
             }`}
           >
-            <tab.icon size={13} />
+            <tab.icon size={12} />
             {tab.label}
           </button>
         ))}
       </div>
       <div className="flex items-center gap-2 text-[10px] text-dim">
-        <span className="px-3 py-1.5 bg-secondary border border-border font-mono truncate max-w-[200px]">
+        <span className="px-3 py-1.5 border border-border font-mono tracking-wider truncate max-w-[200px]">
           {PROVIDER_LABELS[provider]} · {model || 'no model'}
         </span>
       </div>
