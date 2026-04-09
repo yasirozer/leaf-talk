@@ -27,21 +27,21 @@ export function BranchPanel() {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col surface-1">
       {/* Header */}
-      <div className="p-4 flex items-center gap-2">
+      <div className="p-3 border-b border-border flex items-center gap-2">
         <GitBranch size={14} className="text-primary flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-medium truncate">{branch.title}</h3>
           <span className="text-[10px] text-dim">{new Date(branch.createdAt).toLocaleString()}</span>
         </div>
-        <button onClick={store.closeBranchPanel} className="p-2 rounded-xl hover:bg-secondary transition-colors">
+        <button onClick={store.closeBranchPanel} className="p-1.5 rounded-lg hover:surface-2 transition-colors">
           <X size={14} className="text-dim" />
         </button>
       </div>
 
       {/* Source quote */}
-      <div className="mx-4 mb-3 px-4 py-3 rounded-xl bg-primary/5 border border-primary/10">
+      <div className="px-3 py-2 border-b border-border bg-primary/5">
         <div className="flex items-start gap-2">
           <Quote size={10} className="text-primary mt-1 flex-shrink-0" />
           <p className="text-xs text-subtle italic line-clamp-3">"{branch.anchor.selectedText}"</p>
