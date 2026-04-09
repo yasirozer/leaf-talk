@@ -27,19 +27,19 @@ export function MainChat() {
 
   if (!convId) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-6" onClick={handleDismissPopup}>
-        <div className="w-16 h-16 border border-primary/40 flex items-center justify-center glow-yellow">
-          <MessageSquarePlus size={28} className="text-neon" />
+      <div className="flex-1 flex flex-col items-center justify-center gap-4" onClick={handleDismissPopup}>
+        <div className="w-16 h-16 rounded-2xl surface-2 flex items-center justify-center">
+          <MessageSquarePlus size={28} className="text-primary" />
         </div>
         <div className="text-center">
-          <h2 className="text-xl font-black mb-2 tracking-wider">BRANCHABLE AI</h2>
-          <p className="text-xs text-dim max-w-sm leading-relaxed tracking-wide">Start a session. Select text in any response to create a branch and explore deeper.</p>
+          <h2 className="text-lg font-semibold mb-1">Branchable AI</h2>
+          <p className="text-sm text-dim max-w-sm">Start a conversation, then select text in any assistant reply to create a branch and explore deeper.</p>
         </div>
         <button
           onClick={() => store.createConversation()}
-          className="mt-2 px-8 py-3 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-[0.15em] hover:opacity-90 transition-opacity glow-yellow"
+          className="mt-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity glow-green"
         >
-          New Session
+          New conversation
         </button>
       </div>
     );
@@ -48,10 +48,10 @@ export function MainChat() {
   return (
     <div className="flex-1 flex flex-col min-w-0" onClick={handleDismissPopup}>
       <div className="flex-1 overflow-y-auto scrollbar-thin">
-        <div className="max-w-3xl mx-auto py-6">
+        <div className="max-w-3xl mx-auto py-4">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-dim text-xs tracking-wide uppercase">Awaiting input_</p>
+              <p className="text-dim text-sm">Send a message to begin.</p>
             </div>
           )}
           {messages.map(msg => (
