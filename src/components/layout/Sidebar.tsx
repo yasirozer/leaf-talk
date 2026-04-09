@@ -6,7 +6,7 @@ export function Sidebar() {
   const conversations = store.conversations;
 
   return (
-    <div className="w-60 flex flex-col h-full card-glass overflow-hidden">
+    <div className="w-60 flex flex-col h-full surface-1 border-r border-border overflow-hidden">
       {/* Header */}
       <div className="p-4 flex items-center justify-between">
         <span className="text-xs font-semibold tracking-wide uppercase text-dim">Conversations</span>
@@ -24,7 +24,7 @@ export function Sidebar() {
           <button
             key={conv.id}
             onClick={() => store.setActiveConversation(conv.id)}
-            className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left group transition-all ${
+            className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-left group transition-all ${
               store.activeConversationId === conv.id
                 ? 'bg-secondary text-foreground'
                 : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
