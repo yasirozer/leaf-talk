@@ -83,16 +83,16 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
   return (
     <div className={`group flex gap-3 px-4 py-4 ${isUser ? 'justify-end' : ''}`}>
       {!isUser && (
-        <div className="flex-shrink-0 w-7 h-7 rounded-lg surface-2 flex items-center justify-center mt-0.5">
+        <div className="flex-shrink-0 w-8 h-8 bg-secondary flex items-center justify-center mt-0.5">
           <Bot size={14} className="text-primary" />
         </div>
       )}
       <div className={`flex flex-col max-w-[720px] ${isUser ? 'items-end' : 'items-start'} flex-1`}>
         <div
-          className={`relative rounded-xl px-4 py-3 ${
+          className={`relative px-4 py-3 ${
             isUser
               ? 'bg-primary/10 border border-primary/20'
-              : 'surface-2'
+              : 'bg-secondary'
           }`}
         >
           {editing ? (
@@ -100,19 +100,19 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
               <textarea
                 value={editContent}
                 onChange={e => setEditContent(e.target.value)}
-                className="bg-transparent border border-border rounded-lg p-2 text-sm resize-none min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary"
+                className="bg-transparent border border-border p-2 text-sm resize-none min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary"
                 rows={3}
               />
               <div className="flex gap-2 justify-end">
                 <button onClick={() => setEditing(false)} className="text-xs text-dim px-2 py-1 hover:text-foreground transition-colors">Cancel</button>
-                <button onClick={handleEdit} className="text-xs bg-primary text-primary-foreground px-3 py-1 rounded-md hover:opacity-90 transition-opacity">Save</button>
+                <button onClick={handleEdit} className="text-xs bg-primary text-primary-foreground px-3 py-1 rounded-lg hover:opacity-90 transition-opacity">Save</button>
               </div>
             </div>
           ) : (
             <div
               ref={contentRef}
               onMouseUp={handleTextSelection}
-              className="prose-chat text-sm"
+              className="prose-chat"
             >
               {message.isStreaming && !message.content ? (
                 <div className="flex items-center gap-1.5 py-1">
@@ -144,25 +144,25 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
 
           {/* Hover actions */}
           {!editing && !message.isStreaming && (
-            <div className="absolute -top-8 right-0 hidden group-hover:flex gap-1 surface-3 rounded-lg p-1 border border-border animate-fade-in">
-              <button onClick={handleCopy} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Copy">
+            <div className="absolute -top-9 right-0 hidden group-hover:flex gap-1 bg-card p-1.5 border border-border animate-fade-in shadow-lg">
+              <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-secondary transition-colors" title="Copy">
                 {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} className="text-dim" />}
               </button>
-              <button onClick={handleEdit} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Edit">
+              <button onClick={handleEdit} className="p-1.5 rounded-lg hover:bg-secondary transition-colors" title="Edit">
                 <Pencil size={12} className="text-dim" />
               </button>
               {!isUser && (
                 <>
                   <button
                     onClick={() => handleQuickBranch('followup')}
-                    className="p-1 rounded hover:bg-primary/10 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
                     title="Follow up"
                   >
                     <MessageSquare size={12} className="text-dim" />
                   </button>
                   <button
                     onClick={() => handleQuickBranch('fork')}
-                    className="p-1 rounded hover:bg-primary/10 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
                     title="Fork"
                   >
                     <GitBranch size={12} className="text-dim" />
@@ -185,7 +185,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
               <button
                 key={branch.id}
                 onClick={() => store.setActiveBranch(branch.id)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all text-left group/branch"
+                className="flex items-center gap-2 px-4 py-2.5 border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all text-left group/branch"
               >
                 <GitBranch size={12} className="text-primary flex-shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -201,7 +201,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
         )}
       </div>
       {isUser && (
-        <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center mt-0.5">
+        <div className="flex-shrink-0 w-8 h-8 bg-primary/20 flex items-center justify-center mt-0.5">
           <User size={14} className="text-primary" />
         </div>
       )}
