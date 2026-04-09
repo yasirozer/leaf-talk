@@ -35,7 +35,7 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
 
   return (
     <div className="p-4">
-      <div className="max-w-3xl mx-auto flex items-end gap-2 bg-secondary rounded-2xl border border-border p-3">
+      <div className="max-w-3xl mx-auto flex items-end gap-2 bg-secondary border border-border p-3">
         <textarea
           ref={textareaRef}
           value={input}
@@ -43,17 +43,17 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           rows={1}
-          className="flex-1 bg-transparent resize-none text-sm px-2 py-1 focus:outline-none placeholder:text-dim scrollbar-thin"
+          className="flex-1 bg-transparent resize-none text-sm font-medium px-2 py-1 focus:outline-none placeholder:text-dim scrollbar-thin"
         />
         {isLoading ? (
-          <button onClick={onStop} className="p-2.5 rounded-xl bg-accent text-accent-foreground hover:opacity-90 transition-opacity flex-shrink-0">
+          <button onClick={onStop} className="p-2.5 bg-accent text-accent-foreground hover:opacity-90 transition-opacity flex-shrink-0">
             <Square size={14} />
           </button>
         ) : (
           <button
             onClick={handleSend}
             disabled={!input.trim()}
-            className="p-2.5 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-20 flex-shrink-0"
+            className="p-2.5 bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-20 flex-shrink-0"
           >
             <Send size={14} />
           </button>

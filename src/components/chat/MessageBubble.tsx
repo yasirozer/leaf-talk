@@ -83,13 +83,13 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
   return (
     <div className={`group flex gap-3 px-4 py-4 ${isUser ? 'justify-end' : ''}`}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-secondary flex items-center justify-center mt-0.5">
+        <div className="flex-shrink-0 w-8 h-8 bg-secondary flex items-center justify-center mt-0.5">
           <Bot size={14} className="text-primary" />
         </div>
       )}
       <div className={`flex flex-col max-w-[720px] ${isUser ? 'items-end' : 'items-start'} flex-1`}>
         <div
-          className={`relative rounded-2xl px-4 py-3 ${
+          className={`relative px-4 py-3 ${
             isUser
               ? 'bg-primary/10 border border-primary/20'
               : 'bg-secondary'
@@ -100,7 +100,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
               <textarea
                 value={editContent}
                 onChange={e => setEditContent(e.target.value)}
-                className="bg-transparent border border-border rounded-xl p-2 text-sm resize-none min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary"
+                className="bg-transparent border border-border p-2 text-sm resize-none min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary"
                 rows={3}
               />
               <div className="flex gap-2 justify-end">
@@ -112,7 +112,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
             <div
               ref={contentRef}
               onMouseUp={handleTextSelection}
-              className="prose-chat text-sm"
+              className="prose-chat"
             >
               {message.isStreaming && !message.content ? (
                 <div className="flex items-center gap-1.5 py-1">
@@ -144,7 +144,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
 
           {/* Hover actions */}
           {!editing && !message.isStreaming && (
-            <div className="absolute -top-9 right-0 hidden group-hover:flex gap-1 bg-card rounded-xl p-1.5 border border-border animate-fade-in shadow-lg">
+            <div className="absolute -top-9 right-0 hidden group-hover:flex gap-1 bg-card p-1.5 border border-border animate-fade-in shadow-lg">
               <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-secondary transition-colors" title="Copy">
                 {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} className="text-dim" />}
               </button>
@@ -185,7 +185,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
               <button
                 key={branch.id}
                 onClick={() => store.setActiveBranch(branch.id)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all text-left group/branch"
+                className="flex items-center gap-2 px-4 py-2.5 border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all text-left group/branch"
               >
                 <GitBranch size={12} className="text-primary flex-shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -201,7 +201,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
         )}
       </div>
       {isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center mt-0.5">
+        <div className="flex-shrink-0 w-8 h-8 bg-primary/20 flex items-center justify-center mt-0.5">
           <User size={14} className="text-primary" />
         </div>
       )}

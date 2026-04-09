@@ -6,54 +6,54 @@
 
 @layer base {
   :root {
-    --background: 40 18% 78%;
-    --foreground: 40 10% 10%;
+    --background: 40 15% 72%;
+    --foreground: 40 15% 5%;
 
-    --card: 40 18% 73%;
-    --card-foreground: 40 10% 10%;
+    --card: 40 15% 68%;
+    --card-foreground: 40 15% 5%;
 
-    --popover: 40 18% 70%;
-    --popover-foreground: 40 10% 10%;
+    --popover: 40 15% 65%;
+    --popover-foreground: 40 15% 5%;
 
-    --primary: 40 10% 15%;
-    --primary-foreground: 40 18% 78%;
+    --primary: 40 20% 8%;
+    --primary-foreground: 40 15% 78%;
 
-    --secondary: 40 15% 70%;
-    --secondary-foreground: 40 10% 20%;
+    --secondary: 40 12% 64%;
+    --secondary-foreground: 40 15% 8%;
 
-    --muted: 40 14% 68%;
-    --muted-foreground: 40 8% 35%;
+    --muted: 40 10% 60%;
+    --muted-foreground: 40 10% 25%;
 
-    --accent: 40 10% 15%;
-    --accent-foreground: 40 18% 78%;
+    --accent: 40 20% 8%;
+    --accent-foreground: 40 15% 78%;
 
-    --destructive: 0 50% 45%;
+    --destructive: 0 55% 40%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 40 12% 62%;
-    --input: 40 12% 62%;
-    --ring: 40 10% 15%;
+    --border: 40 10% 58%;
+    --input: 40 10% 58%;
+    --ring: 40 20% 8%;
 
-    --radius: 1rem;
+    --radius: 0px;
 
-    --sidebar-background: 40 18% 74%;
-    --sidebar-foreground: 40 8% 35%;
-    --sidebar-primary: 40 10% 15%;
-    --sidebar-primary-foreground: 40 18% 78%;
-    --sidebar-accent: 40 15% 68%;
-    --sidebar-accent-foreground: 40 10% 10%;
-    --sidebar-border: 40 12% 62%;
-    --sidebar-ring: 40 10% 15%;
+    --sidebar-background: 40 15% 70%;
+    --sidebar-foreground: 40 10% 25%;
+    --sidebar-primary: 40 20% 8%;
+    --sidebar-primary-foreground: 40 15% 78%;
+    --sidebar-accent: 40 12% 64%;
+    --sidebar-accent-foreground: 40 15% 5%;
+    --sidebar-border: 40 10% 58%;
+    --sidebar-ring: 40 20% 8%;
 
     /* Custom tokens */
-    --surface-1: 40 18% 74%;
-    --surface-2: 40 16% 70%;
-    --surface-3: 40 14% 65%;
-    --branch-glow: 40 10% 15%;
-    --accent-red: 0 50% 45%;
-    --accent-green: 142 40% 35%;
-    --text-dim: 40 8% 40%;
-    --text-subtle: 40 8% 50%;
+    --surface-1: 40 15% 70%;
+    --surface-2: 40 13% 66%;
+    --surface-3: 40 11% 58%;
+    --branch-glow: 40 20% 8%;
+    --accent-red: 0 55% 40%;
+    --accent-green: 142 40% 30%;
+    --text-dim: 40 10% 30%;
+    --text-subtle: 40 8% 42%;
   }
 }
 
@@ -65,6 +65,8 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   code, pre {
@@ -96,8 +98,8 @@
   }
   .card-glass {
     background-color: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
+    border: none;
+    border-radius: 0;
   }
   .scrollbar-thin {
     scrollbar-width: thin;
@@ -148,7 +150,7 @@
 
 /* Markdown prose styling */
 .prose-chat {
-  @apply text-sm leading-relaxed;
+  @apply text-base leading-relaxed font-medium;
 }
 .prose-chat p {
   @apply mb-2 last:mb-0;
