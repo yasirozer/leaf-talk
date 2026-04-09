@@ -6,54 +6,54 @@
 
 @layer base {
   :root {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 90%;
+    --background: 40 18% 78%;
+    --foreground: 40 10% 10%;
 
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 90%;
+    --card: 40 18% 73%;
+    --card-foreground: 40 10% 10%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 90%;
+    --popover: 40 18% 70%;
+    --popover-foreground: 40 10% 10%;
 
-    --primary: 142 60% 50%;
-    --primary-foreground: 0 0% 4%;
+    --primary: 40 10% 15%;
+    --primary-foreground: 40 18% 78%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 70%;
+    --secondary: 40 15% 70%;
+    --secondary-foreground: 40 10% 20%;
 
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 40 14% 68%;
+    --muted-foreground: 40 8% 35%;
 
-    --accent: 0 72% 55%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 40 10% 15%;
+    --accent-foreground: 40 18% 78%;
 
-    --destructive: 0 72% 50%;
+    --destructive: 0 50% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 14%;
-    --input: 0 0% 14%;
-    --ring: 142 60% 50%;
+    --border: 40 12% 62%;
+    --input: 40 12% 62%;
+    --ring: 40 10% 15%;
 
     --radius: 1rem;
 
-    --sidebar-background: 0 0% 7%;
-    --sidebar-foreground: 0 0% 65%;
-    --sidebar-primary: 142 60% 50%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 0 0% 12%;
-    --sidebar-ring: 142 60% 50%;
+    --sidebar-background: 40 18% 74%;
+    --sidebar-foreground: 40 8% 35%;
+    --sidebar-primary: 40 10% 15%;
+    --sidebar-primary-foreground: 40 18% 78%;
+    --sidebar-accent: 40 15% 68%;
+    --sidebar-accent-foreground: 40 10% 10%;
+    --sidebar-border: 40 12% 62%;
+    --sidebar-ring: 40 10% 15%;
 
     /* Custom tokens */
-    --surface-1: 0 0% 7%;
-    --surface-2: 0 0% 11%;
-    --surface-3: 0 0% 15%;
-    --branch-glow: 142 60% 50%;
-    --accent-red: 0 72% 55%;
-    --accent-green: 142 60% 50%;
-    --text-dim: 0 0% 40%;
-    --text-subtle: 0 0% 55%;
+    --surface-1: 40 18% 74%;
+    --surface-2: 40 16% 70%;
+    --surface-3: 40 14% 65%;
+    --branch-glow: 40 10% 15%;
+    --accent-red: 0 50% 45%;
+    --accent-green: 142 40% 35%;
+    --text-dim: 40 8% 40%;
+    --text-subtle: 40 8% 50%;
   }
 }
 
