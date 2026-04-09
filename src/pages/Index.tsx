@@ -12,28 +12,32 @@ const Index = () => {
   const branchPanelOpen = useConversationStore(s => s.branchPanelOpen);
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex flex-1 min-h-0">
+    <div className="h-screen flex flex-col bg-background p-2 gap-2">
+      <div className="flex flex-1 min-h-0 gap-2">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 gap-2">
           <TopBar />
-          <div className="flex-1 flex min-h-0">
+          <div className="flex-1 flex min-h-0 gap-2">
             {activeView === 'chat' && branchPanelOpen ? (
-              <ResizablePanelGroup direction="horizontal">
+              <ResizablePanelGroup direction="horizontal" className="gap-2">
                 <ResizablePanel defaultSize={60} minSize={30}>
-                  <MainChat />
+                  <div className="h-full card-glass overflow-hidden">
+                    <MainChat />
+                  </div>
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={40} minSize={20}>
-                  <BranchPanel />
+                  <div className="h-full card-glass overflow-hidden">
+                    <BranchPanel />
+                  </div>
                 </ResizablePanel>
               </ResizablePanelGroup>
             ) : (
-              <>
+              <div className="flex-1 card-glass overflow-hidden">
                 {activeView === 'chat' && <MainChat />}
                 {activeView === 'tree' && <TreeView />}
                 {activeView === 'settings' && <SettingsView />}
-              </>
+              </div>
             )}
           </div>
         </div>
