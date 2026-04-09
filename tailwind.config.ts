@@ -16,6 +16,7 @@ export default {
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
+        'cyber-yellow': '#EAB308',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
