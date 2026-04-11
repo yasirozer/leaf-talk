@@ -27,24 +27,24 @@ export function BranchPanel() {
   };
 
   return (
-    <div className="h-full flex flex-col surface-1">
+    <div className="h-full flex flex-col surface-1 scanline">
       {/* Header */}
       <div className="p-3 border-b border-border flex items-center gap-2">
-        <GitBranch size={14} className="text-primary flex-shrink-0" />
+        <GitBranch size={13} className="text-primary flex-shrink-0" />
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-medium truncate">{branch.title}</h3>
-          <span className="text-[10px] text-dim">{new Date(branch.createdAt).toLocaleString()}</span>
+          <h3 className="text-[11px] font-bold tracking-wider uppercase text-primary truncate">{branch.title}</h3>
+          <span className="text-[9px] text-dim tracking-wider uppercase">{new Date(branch.createdAt).toLocaleString()}</span>
         </div>
-        <button onClick={store.closeBranchPanel} className="p-1.5 rounded-lg hover:surface-2 transition-colors">
-          <X size={14} className="text-dim" />
+        <button onClick={store.closeBranchPanel} className="p-1.5 rounded hover:surface-2 transition-colors">
+          <X size={13} className="text-dim" />
         </button>
       </div>
 
       {/* Source quote */}
       <div className="px-3 py-2 border-b border-border bg-primary/5">
         <div className="flex items-start gap-2">
-          <Quote size={10} className="text-primary mt-1 flex-shrink-0" />
-          <p className="text-xs text-subtle italic line-clamp-3">"{branch.anchor.selectedText}"</p>
+          <span className="text-primary text-[10px] mt-0.5">■</span>
+          <p className="text-[11px] text-subtle italic line-clamp-3 font-mono">"{branch.anchor.selectedText}"</p>
         </div>
       </div>
 
@@ -55,13 +55,13 @@ export function BranchPanel() {
         ))}
         {branchMessages.filter(m => m.role !== 'system').length === 0 && (
           <div className="flex items-center justify-center py-12">
-            <p className="text-xs text-dim">Ask a follow-up about this branch.</p>
+            <p className="text-[10px] text-dim tracking-wider uppercase">AWAITING BRANCH INPUT</p>
           </div>
         )}
         <div ref={bottomRef} />
       </div>
 
-      <ChatInput onSend={handleSend} onStop={stopStream} isLoading={isLoading} placeholder="Continue this branch..." />
+      <ChatInput onSend={handleSend} onStop={stopStream} isLoading={isLoading} placeholder="CONTINUE BRANCH..." />
     </div>
   );
 }

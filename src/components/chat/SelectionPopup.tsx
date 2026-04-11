@@ -2,7 +2,7 @@ import { useConversationStore } from '@/store/conversation-store';
 import { GitBranch, MessageSquare } from 'lucide-react';
 
 export function SelectionPopup() {
-  const { selectionPopup, hideSelectionPopup, activeConversationId, createBranch, addMessage, getMessagesUpTo } = useConversationStore();
+  const { selectionPopup, hideSelectionPopup, activeConversationId, createBranch, addMessage } = useConversationStore();
 
   if (!selectionPopup.visible || !activeConversationId) return null;
 
@@ -14,7 +14,6 @@ export function SelectionPopup() {
       endOffset: selectionPopup.endOffset,
     });
 
-    // Add the selected text as system context in the branch
     addMessage({
       conversationId: activeConversationId,
       branchId,
@@ -26,30 +25,26 @@ export function SelectionPopup() {
     hideSelectionPopup();
   };
 
-  const handleFollowUp = () => {
-    handleBranch();
-  };
-
   return (
     <div
       className="fixed z-50 animate-popup-in"
       style={{ left: selectionPopup.x, top: selectionPopup.y, transform: 'translate(-50%, -100%)' }}
     >
-      <div className="flex gap-1 surface-3 border border-border rounded-xl p-1.5 shadow-xl shadow-black/40">
-        <button
-          onClick={handleFollowUp}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-primary/10 text-foreground transition-colors whitespace-nowrap"
-        >
-          <MessageSquare size={12} className="text-primary" />
-          Follow up
-        </button>
-        <div className="w-px bg-border" />
+      <div className="flex gap-0.5 surface-3 border border-primary/30 rounded p-1 shadow-xl shadow-black/60 glow-green">
         <button
           onClick={handleBranch}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-primary/10 text-foreground transition-colors whitespace-nowrap"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded text-[10px] font-bold tracking-widest uppercase hover:bg-primary/10 text-primary transition-colors whitespace-nowrap"
         >
-          <GitBranch size={12} className="text-primary" />
-          Fork
+          <MessageSquare size={11} />
+          FOLLOW_UP
+        </button>
+        <div className="w-px bg-primary/20" />
+        <button
+          onClick={handleBranch}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded text-[10px] font-bold tracking-widest uppercase hover:bg-primary/10 text-primary transition-colors whitespace-nowrap"
+        >
+          <GitBranch size={11} />
+          FORK
         </button>
       </div>
     </div>

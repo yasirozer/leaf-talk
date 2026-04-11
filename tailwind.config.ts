@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Space Grotesk", "JetBrains Mono", "monospace"],
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {

@@ -27,31 +27,41 @@ export function MainChat() {
 
   if (!convId) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-4" onClick={handleDismissPopup}>
-        <div className="w-16 h-16 rounded-2xl surface-2 flex items-center justify-center">
-          <MessageSquarePlus size={28} className="text-primary" />
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 scanline" onClick={handleDismissPopup}>
+        <div className="w-16 h-16 rounded border border-primary/30 bg-primary/5 flex items-center justify-center">
+          <span className="text-primary text-2xl">◈</span>
         </div>
         <div className="text-center">
-          <h2 className="text-lg font-semibold mb-1">Branchable AI</h2>
-          <p className="text-sm text-dim max-w-sm">Start a conversation, then select text in any assistant reply to create a branch and explore deeper.</p>
+          <h2 className="text-sm font-bold tracking-widest uppercase text-primary mb-2">CIPHER_PROTOCOL_V1.0</h2>
+          <p className="text-[11px] text-dim max-w-sm tracking-wide uppercase leading-relaxed">
+            Initialize a new session. Select text in any response to create operational branches.
+          </p>
         </div>
         <button
           onClick={() => store.createConversation()}
-          className="mt-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity glow-green"
+          className="mt-2 px-6 py-2.5 rounded border border-primary bg-primary/10 text-primary text-[11px] font-bold tracking-widest uppercase hover:bg-primary/20 transition-colors glow-green"
         >
-          New conversation
+          INITIALIZE_SESSION
         </button>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col min-w-0" onClick={handleDismissPopup}>
+    <div className="flex-1 flex flex-col min-w-0 scanline" onClick={handleDismissPopup}>
+      {/* Channel header */}
+      <div className="px-4 py-2 border-b border-border flex items-center gap-3">
+        <span className="text-primary text-[10px]">■</span>
+        <span className="text-[10px] text-primary font-bold tracking-widest uppercase">
+          ENCRYPTED CHANNEL [{convId.slice(0, 8).toUpperCase()}]
+        </span>
+      </div>
+
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="max-w-3xl mx-auto py-4">
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-dim text-sm">Send a message to begin.</p>
+              <p className="text-dim text-[11px] tracking-wider uppercase">AWAITING INPUT // STANDBY</p>
             </div>
           )}
           {messages.map(msg => (
@@ -61,6 +71,13 @@ export function MainChat() {
         </div>
       </div>
       <SelectionPopup />
+
+      {/* Terminal label */}
+      <div className="px-4 py-1">
+        <span className="text-[9px] text-dim tracking-widest uppercase font-mono">
+          INPUT_TERMINAL_V1.0.4 // STANDBY
+        </span>
+      </div>
       <ChatInput onSend={sendMessage} onStop={stopStream} isLoading={isLoading} />
     </div>
   );
