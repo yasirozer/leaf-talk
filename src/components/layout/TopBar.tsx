@@ -1,54 +1,39 @@
 import { useConversationStore } from '@/store/conversation-store';
-import { MessageSquare, Network, Settings, Power, Share2, MoreVertical } from 'lucide-react';
+import { MessageSquare, Network, Settings } from 'lucide-react';
 import { PROVIDER_LABELS } from '@/types';
 
 export function TopBar() {
   const store = useConversationStore();
   const { provider, model } = store.providerSettings;
-  const conv = store.conversations.find(c => c.id === store.activeConversationId);
 
   const tabs = [
-    { id: 'chat' as const, label: 'TERMINAL' },
-    { id: 'tree' as const, label: 'NETWORK' },
-    { id: 'settings' as const, label: 'ENCRYPTION' },
+    { id: 'chat' as const, icon: MessageSquare, label: 'Chat' },
+    { id: 'tree' as const, icon: Network, label: 'Tree' },
+    { id: 'settings' as const, icon: Settings, label: 'Settings' },
   ];
 
   return (
     <div className="h-11 border-b border-border flex items-center justify-between px-4 surface-1">
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-1">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => store.setActiveView(tab.id)}
-            className={`px-4 py-2 text-[11px] font-medium tracking-widest uppercase transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               store.activeView === tab.id
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-dim hover:text-foreground'
+                ? 'bg-primary/10 text-primary'
+                : 'text-dim hover:text-foreground hover:surface-2'
             }`}
           >
+            <tab.icon size={13} />
             {tab.label}
           </button>
         ))}
       </div>
-      <div className="flex items-center gap-3">
-        {conv && (
-          <span className="text-[9px] text-dim font-mono tracking-wider uppercase">
-            SESSION_ID: {conv.id.slice(0, 8).toUpperCase()}
-          </span>
-        )}
-        <div className="flex items-center gap-1.5 text-[9px] text-dim font-mono">
-          <span className="px-2 py-1 rounded border border-border surface-2 tracking-wider uppercase">
-            {PROVIDER_LABELS[provider]} · {model || 'NO_MODEL'}
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <button className="p-1.5 rounded hover:surface-2 transition-colors">
-            <Settings size={13} className="text-dim" />
-          </button>
-          <button className="p-1.5 rounded hover:surface-2 transition-colors">
-            <Power size={13} className="text-dim" />
-          </button>
-        </div>
+      <div className="flex items-center gap-2 text-[10px] text-dim">
+        <span className="px-2 py-1 rounded-md surface-2 border border-border font-mono truncate max-w-[200px]">
+          {PROVIDER_LABELS[provider]} · {model || 'no model'}
+        </span>
       </div>
     </div>
   );

@@ -83,21 +83,16 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
   return (
     <div className={`group flex gap-3 px-4 py-4 ${isUser ? 'justify-end' : ''}`}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded border border-primary/30 bg-primary/5 flex items-center justify-center mt-0.5">
-          <span className="text-primary text-sm">◈</span>
+        <div className="flex-shrink-0 w-7 h-7 rounded-lg surface-2 flex items-center justify-center mt-0.5">
+          <Bot size={14} className="text-primary" />
         </div>
       )}
       <div className={`flex flex-col max-w-[720px] ${isUser ? 'items-end' : 'items-start'} flex-1`}>
-        {/* Role label */}
-        <span className={`text-[9px] tracking-widest uppercase mb-1.5 font-bold ${isUser ? 'text-dim' : 'text-primary'}`}>
-          {isUser ? 'OPERATOR_01' : 'NEURAL_NET_ALPHA'}
-        </span>
-
         <div
-          className={`relative rounded px-4 py-3 ${
+          className={`relative rounded-xl px-4 py-3 ${
             isUser
-              ? 'bg-primary text-primary-foreground'
-              : 'border border-border surface-2'
+              ? 'bg-primary/10 border border-primary/20'
+              : 'surface-2'
           }`}
         >
           {editing ? (
@@ -105,23 +100,23 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
               <textarea
                 value={editContent}
                 onChange={e => setEditContent(e.target.value)}
-                className="bg-transparent border border-border rounded p-2 text-sm resize-none min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary font-mono"
+                className="bg-transparent border border-border rounded-lg p-2 text-sm resize-none min-h-[60px] focus:outline-none focus:ring-1 focus:ring-primary"
                 rows={3}
               />
               <div className="flex gap-2 justify-end">
-                <button onClick={() => setEditing(false)} className="text-[10px] text-dim px-2 py-1 hover:text-foreground transition-colors tracking-wider uppercase">Cancel</button>
-                <button onClick={handleEdit} className="text-[10px] bg-primary text-primary-foreground px-3 py-1 rounded hover:opacity-90 transition-opacity tracking-wider uppercase font-bold">Save</button>
+                <button onClick={() => setEditing(false)} className="text-xs text-dim px-2 py-1 hover:text-foreground transition-colors">Cancel</button>
+                <button onClick={handleEdit} className="text-xs bg-primary text-primary-foreground px-3 py-1 rounded-md hover:opacity-90 transition-opacity">Save</button>
               </div>
             </div>
           ) : (
             <div
               ref={contentRef}
               onMouseUp={handleTextSelection}
-              className={`prose-chat text-sm ${isUser ? 'font-bold tracking-wide uppercase text-[13px]' : ''}`}
+              className="prose-chat text-sm"
             >
               {message.isStreaming && !message.content ? (
                 <div className="flex items-center gap-1.5 py-1">
-                  <span className="text-[10px] text-dim mr-1 tracking-wider uppercase">PROCESSING</span>
+                  <span className="text-xs text-dim mr-1">Thinking</span>
                   <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
                   <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
                   <span className="thinking-dot w-1.5 h-1.5 rounded-full bg-primary inline-block" />
@@ -149,7 +144,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
 
           {/* Hover actions */}
           {!editing && !message.isStreaming && (
-            <div className="absolute -top-8 right-0 hidden group-hover:flex gap-1 surface-3 rounded p-1 border border-border animate-fade-in">
+            <div className="absolute -top-8 right-0 hidden group-hover:flex gap-1 surface-3 rounded-lg p-1 border border-border animate-fade-in">
               <button onClick={handleCopy} className="p-1 rounded hover:bg-primary/10 transition-colors" title="Copy">
                 {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} className="text-dim" />}
               </button>
@@ -180,7 +175,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
 
         {/* Edited indicator */}
         {message.editedAt && (
-          <span className="text-[9px] text-dim mt-1 tracking-wider uppercase">MODIFIED</span>
+          <span className="text-[10px] text-dim mt-1 italic">edited</span>
         )}
 
         {/* Branch references */}
@@ -190,23 +185,23 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
               <button
                 key={branch.id}
                 onClick={() => store.setActiveBranch(branch.id)}
-                className="flex items-center gap-2 px-3 py-2 rounded border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all text-left group/branch"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all text-left group/branch"
               >
-                <span className="text-primary text-[10px]">■</span>
+                <GitBranch size={12} className="text-primary flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-[11px] font-bold text-primary tracking-wider uppercase truncate">{branch.title}</div>
-                  <div className="text-[9px] text-dim tracking-wider uppercase">
-                    {new Date(branch.createdAt).toLocaleTimeString()} · {branch.messageCount} MSGS
+                  <div className="text-xs font-medium text-primary truncate">{branch.title}</div>
+                  <div className="text-[10px] text-dim">
+                    {new Date(branch.createdAt).toLocaleTimeString()} · {branch.messageCount} msgs
                   </div>
                 </div>
-                <span className="text-[9px] text-dim group-hover/branch:text-primary transition-colors tracking-wider uppercase">VIEW →</span>
+                <span className="text-[10px] text-dim group-hover/branch:text-primary transition-colors">View →</span>
               </button>
             ))}
           </div>
         )}
       </div>
       {isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded border border-primary/30 bg-primary/20 flex items-center justify-center mt-0.5">
+        <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center mt-0.5">
           <User size={14} className="text-primary" />
         </div>
       )}
