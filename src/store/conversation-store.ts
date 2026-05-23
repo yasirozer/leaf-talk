@@ -48,6 +48,8 @@ interface ConversationStore {
   createBranch: (conversationId: string, anchor: Branch['anchor']) => string;
   setActiveBranch: (id: string | null) => void;
   closeBranchPanel: () => void;
+  toggleBranchFullscreen: () => void;
+  setBranchFullscreen: (v: boolean) => void;
 
   // Selection popup
   showSelectionPopup: (state: Omit<SelectionPopupState, 'visible'>) => void;
