@@ -90,14 +90,20 @@ export const useConversationStore = create<ConversationStore>()(
         return id;
       },
 
-      setActiveConversation: (id) => set({ activeConversationId: id, activeBranchId: null, branchPanelOpen: false, activeView: 'chat' }),
+      setActiveConversation: (id) => set({ activeConversationId: id, activeBranchId: null, branchPanelOpen: false, branchPanelFullscreen: false, activeView: 'chat' }),
 
-      deleteConversation: (id) => set(s => ({
-        conversations: s.conversations.filter(c => c.id !== id),
-        messages: s.messages.filter(m => m.conversationId !== id),
-        branches: s.branches.filter(b => b.conversationId !== id),
-        activeConversationId: s.activeConversationId === id ? null : s.activeConversationId,
-      })),
+      deleteConversation: (id) => set(s => {
+        const isActive = s.activeConversationId === id;
+        return {
+          conversations: s.conversations.filter(c => c.id !== id),
+          messages: s.messages.filter(m => m.conversationId !== id),
+          branches: s.branches.filter(b => b.conversationId !== id),
+          activeConversationId: isActive ? null : s.activeConversationId,
+          activeBranchId: isActive ? null : s.activeBranchId,
+          branchPanelOpen: isActive ? false : s.branchPanelOpen,
+          branchPanelFullscreen: isActive ? false : s.branchPanelFullscreen,
+        };
+      }),
 
       toggleFavorite: (id) => set(s => ({
         conversations: s.conversations.map(c => c.id === id ? { ...c, isFavorite: !c.isFavorite } : c),
