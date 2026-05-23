@@ -37,6 +37,14 @@ export function BranchPanel() {
         </div>
         <button
           type="button"
+          onClick={store.toggleBranchFullscreen}
+          title={store.branchPanelFullscreen ? 'Exit fullscreen (Ctrl/Cmd+B)' : 'Fullscreen (Ctrl/Cmd+B)'}
+          className="rounded-lg p-1.5 text-dim transition-colors hover:bg-[var(--surface-container)] hover:text-[var(--on-surface)]"
+        >
+          {store.branchPanelFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+        </button>
+        <button
+          type="button"
           onClick={store.closeBranchPanel}
           className="rounded-lg p-1.5 text-dim transition-colors hover:bg-[var(--surface-container)] hover:text-[var(--on-surface)]"
         >
