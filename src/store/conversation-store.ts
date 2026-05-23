@@ -153,8 +153,10 @@ export const useConversationStore = create<ConversationStore>()(
         return id;
       },
 
-      setActiveBranch: (id) => set({ activeBranchId: id, branchPanelOpen: id !== null }),
-      closeBranchPanel: () => set({ branchPanelOpen: false, activeBranchId: null }),
+      setActiveBranch: (id) => set({ activeBranchId: id, branchPanelOpen: id !== null, branchPanelFullscreen: id === null ? false : undefined as any }),
+      closeBranchPanel: () => set({ branchPanelOpen: false, activeBranchId: null, branchPanelFullscreen: false }),
+      toggleBranchFullscreen: () => set(s => ({ branchPanelFullscreen: !s.branchPanelFullscreen })),
+      setBranchFullscreen: (v) => set({ branchPanelFullscreen: v }),
 
       showSelectionPopup: (state) => set({ selectionPopup: { ...state, visible: true } }),
       hideSelectionPopup: () => set(s => ({ selectionPopup: { ...s.selectionPopup, visible: false } })),
