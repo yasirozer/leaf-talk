@@ -172,8 +172,24 @@ export const useConversationStore = create<ConversationStore>()(
         conversations: state.conversations,
         messages: state.messages,
         branches: state.branches,
-        providerSettings: state.providerSettings,
+        // Exclude apiKey from localStorage; persist only non-sensitive provider settings
+        providerSettings: {
+          provider: state.providerSettings.provider,
+          model: state.providerSettings.model,
+          customBaseUrl: state.providerSettings.customBaseUrl,
+          customModelId: state.providerSettings.customModelId,
+          apiKey: '',
+        },
       }),
+      merge: (persisted: any, current) => {
+        const merged = { ...current, ...(persisted || {}) };
+        merged.providerSettings = {
+          ...current.providerSettings,
+          ...(persisted?.providerSettings || {}),
+          apiKey: loadSessionApiKey(),
+        };
+        return merged;
+      },
     }
   )
 );
