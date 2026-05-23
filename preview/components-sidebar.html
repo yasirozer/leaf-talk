@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 0; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; display: flex; }
+  .sidebar { width: 200px; background: hsl(220 14% 8%); border-right: 1px solid hsl(220 14% 15%); height: 180px; display: flex; flex-direction: column; }
+  .sidebar-head { padding: 10px 12px; border-bottom: 1px solid hsl(220 14% 15%); display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); }
+  .plus-btn { padding: 4px; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: hsl(220 14% 70%); display: flex; }
+  .sidebar-list { padding: 6px; flex: 1; overflow: hidden; }
+  .nav-item { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 1px; }
+  .nav-item.active { background: hsl(220 14% 14%); color: hsl(220 14% 92%); }
+  .nav-item.default { color: hsl(220 14% 70%); }
+  .nav-item .actions { margin-left: auto; display: flex; gap: 2px; }
+  .sep { width: 1px; background: hsl(220 14% 15%); }
+  .right { padding: 16px; flex: 1; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="sidebar">
+    <div class="sidebar-head">
+      <span class="sidebar-label">Conversations</span>
+      <button class="plus-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    </div>
+    <div class="sidebar-list">
+      <div class="nav-item active">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Branching strategies</span>
+        <div class="actions">
+          <button style="padding:2px;border:none;background:transparent;cursor:pointer;border-radius:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="hsl(220 14% 45%)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+          <button style="padding:2px;border:none;background:transparent;cursor:pointer;border-radius:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="hsl(220 14% 45%)" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
+        </div>
+      </div>
+      <div class="nav-item default">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">API key setup</span>
+      </div>
+      <div class="nav-item default">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">What-if scenarios</span>
+      </div>
+      <div style="text-align:center;padding:6px;font-size:10px;color:hsl(220 14% 45%)">+ 2 more</div>
+    </div>
+  </div>
+</body></html>

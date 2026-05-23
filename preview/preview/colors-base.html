@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; }
+  .row { display: flex; gap: 6px; margin-bottom: 10px; }
+  .swatch { flex: 1; height: 48px; border-radius: 8px; position: relative; display: flex; align-items: flex-end; padding: 6px; }
+  .swatch span { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.55); line-height: 1.2; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); margin-bottom: 6px; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="label">Neutral Scale</div>
+  <div class="row">
+    <div class="swatch" style="background:hsl(220 14% 8%)"><span>sidebar</span></div>
+    <div class="swatch" style="background:hsl(220 14% 10%)"><span>bg</span></div>
+    <div class="swatch" style="background:hsl(220 14% 11%)"><span>surface-1</span></div>
+    <div class="swatch" style="background:hsl(220 14% 14%)"><span>surface-2</span></div>
+    <div class="swatch" style="background:hsl(220 14% 16%)"><span>muted</span></div>
+    <div class="swatch" style="background:hsl(220 14% 17%)"><span>surface-3</span></div>
+    <div class="swatch" style="background:hsl(220 14% 18%)"><span>border</span></div>
+  </div>
+  <div class="label">Foreground Scale</div>
+  <div class="row">
+    <div class="swatch" style="background:hsl(220 14% 45%)"><span>dim</span></div>
+    <div class="swatch" style="background:hsl(220 14% 60%)"><span>subtle</span></div>
+    <div class="swatch" style="background:hsl(220 14% 92%)"><span>fg</span></div>
+  </div>
+  <div class="label">Accent Colors</div>
+  <div class="row">
+    <div class="swatch" style="background:hsl(142 60% 50%)"><span>primary green</span></div>
+    <div class="swatch" style="background:hsl(142 60% 50% / 0.20)"><span>green/20</span></div>
+    <div class="swatch" style="background:hsl(142 60% 50% / 0.10)"><span>green/10</span></div>
+    <div class="swatch" style="background:hsl(142 60% 50% / 0.05)"><span>green/5</span></div>
+    <div class="swatch" style="background:hsl(0 72% 55%)"><span>red</span></div>
+    <div class="swatch" style="background:hsl(0 72% 55% / 0.20)"><span>red/20</span></div>
+  </div>
+</body></html>

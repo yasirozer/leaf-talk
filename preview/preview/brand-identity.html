@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,700;0,900;1,900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 700px; height: 340px; overflow: hidden;
+    background: hsl(220 14% 8%);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    border-radius: 14px;
+  }
+
+  /* ── LEFT: editorial hero ── */
+  .left {
+    flex: 0 0 52%;
+    padding: 28px 30px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: hsl(142 60% 50%);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 1.5px;
+    background: hsl(142 60% 50%);
+    border-radius: 2px;
+  }
+
+  .hero-type {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    padding: 8px 0;
+  }
+
+  .hero-bracket {
+    font-size: 52px;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: hsl(142 60% 50% / 0.18);
+  }
+
+  .hero-word {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: hsl(220 14% 93%);
+  }
+
+  .hero-word .green { color: hsl(142 60% 50%); }
+
+  .tagline {
+    font-size: 11px;
+    color: hsl(220 14% 42%);
+    line-height: 1.55;
+    max-width: 210px;
+    font-weight: 400;
+  }
+
+  /* Font pairing row */
+  .font-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .font-item { display: flex; flex-direction: column; gap: 2px; }
+  .font-label { font-size: 9px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 35%); }
+  .font-value { font-size: 13px; font-weight: 700; color: hsl(220 14% 65%); }
+  .font-value.mono { font-family: 'JetBrains Mono', monospace; color: hsl(142 60% 45%); font-size: 11px; }
+  .divider-v { width: 1px; height: 28px; background: hsl(220 14% 17%); }
+
+  /* ── RIGHT: dark card with floating elements ── */
+  .right {
+    flex: 1;
+    padding: 20px 20px 20px 14px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Diagonal stripes decoration */
+  .stripes {
+    position: absolute;
+    bottom: -10px; right: -10px;
+    width: 110px; height: 110px;
+    overflow: hidden;
+    border-radius: 0 0 14px 0;
+    opacity: 0.18;
+  }
+  .stripes svg { display: block; }
+
+  /* Green orb */
+  .orb {
+    position: absolute;
+    bottom: 18px; right: 22px;
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: hsl(142 60% 50%);
+    filter: blur(2px);
+    opacity: 0.22;
+  }
+
+  /* Chat card */
+  .chat-card {
+    background: hsl(220 14% 12%);
+    border: 1px solid hsl(220 14% 19%);
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .card-topbar {
+    height: 28px;
+    background: hsl(220 14% 10%);
+    border-bottom: 1px solid hsl(220 14% 16%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 10px;
+  }
+
+  .tab {
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 9px;
+    font-weight: 500;
+  }
+  .tab.active { background: hsl(142 60% 50% / 0.12); color: hsl(142 60% 55%); }
+  .tab.dim { color: hsl(220 14% 32%); }
+
+  .card-body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .msg-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .msg-row.right { justify-content: flex-end; }
+
+  .avatar {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    background: hsl(220 14% 17%);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .bubble {
+    border-radius: 8px;
+    padding: 5px 9px;
+    font-size: 9px;
+    line-height: 1.45;
+    max-width: 170px;
+  }
+  .bubble.ai { background: hsl(220 14% 17%); color: hsl(220 14% 72%); }
+  .bubble.user { background: hsl(142 60% 50% / 0.10); border: 1px solid hsl(142 60% 50% / 0.22); color: hsl(220 14% 78%); }
+
+  .branch-chip {
+    margin-left: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid hsl(142 60% 50% / 0.22);
+    background: hsl(142 60% 50% / 0.06);
+    width: fit-content;
+  }
+  .branch-chip .dot { width: 5px; height: 5px; border-radius: 50%; background: hsl(142 60% 50%); }
+  .branch-chip span { font-size: 8px; color: hsl(142 60% 55%); font-weight: 500; }
+  .branch-chip .arrow { font-size: 8px; color: hsl(220 14% 35%); }
+
+  /* Palette card */
+  .palette-card {
+    background: hsl(220 14% 12%);
+    border: 1px solid hsl(220 14% 19%);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .pal-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: hsl(220 14% 30%);
+    flex-shrink: 0;
+  }
+
+  .swatches {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    flex: 1;
+  }
+
+  .sw {
+    border-radius: 5px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="eyebrow">Brand Identity</div>
+
+    <div class="hero-type">
+      <div class="hero-bracket">{branch}</div>
+      <div class="hero-word">leaf<span class="green">talk</span></div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <p class="tagline">Fork any AI response into a new thread. Explore ideas in parallel without losing your place.</p>
+      <div class="font-row">
+        <div class="font-item">
+          <div class="font-label">Sans</div>
+          <div class="font-value">Inter</div>
+        </div>
+        <div class="divider-v"></div>
+        <div class="font-item">
+          <div class="font-label">Mono</div>
+          <div class="font-value mono">JetBrains</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <!-- Decorative stripes -->
+    <div class="stripes">
+      <svg width="110" height="110" viewBox="0 0 110 110">
+        <defs>
+          <pattern id="diag" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width="5" height="12" fill="hsl(220 14% 60%)"/>
+          </pattern>
+        </defs>
+        <rect width="110" height="110" fill="url(#diag)"/>
+      </svg>
+    </div>
+
+    <!-- Green orb -->
+    <div class="orb"></div>
+
+    <!-- Chat card -->
+    <div class="chat-card">
+      <div class="card-topbar">
+        <div class="tab active">Chat</div>
+        <div class="tab dim">Tree</div>
+        <div class="tab dim">Settings</div>
+      </div>
+      <div class="card-body">
+        <div class="msg-row">
+          <div class="avatar">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="hsl(142 60% 50%)" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="bubble ai">Select any text from a response to <strong style="color:hsl(142 60% 60%)">branch</strong> a new thread.</div>
+        </div>
+        <div class="branch-chip">
+          <div class="dot"></div>
+          <span>context inheritance</span>
+          <span class="arrow">View →</span>
+        </div>
+        <div class="msg-row right">
+          <div class="bubble user">What about nested branches?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Palette card -->
+    <div class="palette-card">
+      <div class="pal-label">Palette</div>
+      <div class="swatches">
+        <div class="sw" style="width:18px;height:28px;background:hsl(220 14% 8%)"></div>
+        <div class="sw" style="width:18px;height:22px;background:hsl(220 14% 11%)"></div>
+        <div class="sw" style="width:18px;height:18px;background:hsl(220 14% 14%)"></div>
+        <div class="sw" style="width:18px;height:14px;background:hsl(220 14% 18%)"></div>
+        <div class="sw" style="width:18px;height:14px;background:hsl(220 14% 55%)"></div>
+        <div class="sw" style="width:18px;height:28px;background:hsl(220 14% 92%)"></div>
+        <div style="width:1px;height:28px;background:hsl(220 14% 20%);flex-shrink:0;"></div>
+        <div class="sw" style="width:24px;height:28px;background:hsl(142 60% 50%);box-shadow:0 0 10px hsl(142 60% 50%/0.5)"></div>
+        <div class="sw" style="width:18px;height:22px;background:hsl(0 72% 55%)"></div>
+      </div>
+    </div>
+  </div>
+
+</body></html>

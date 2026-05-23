@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaf Talk — UI Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #root { height: 100%; overflow: hidden; }
+    body {
+      background: hsl(220 14% 10%);
+      color: hsl(220 14% 92%);
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    @keyframes thinkDot {
+      0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1); }
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: hsl(220 14% 17%); border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Lucide icon shims — expose as globals for JSX components -->
+<script>
+  // Expose lucide icons as globals
+  const iconNames = ['Plus','Star','Trash2','MessageSquare','Network','Settings','Bot','User',
+    'GitBranch','Pencil','Copy','Check','Send','Square','X','ChevronLeft','ChevronRight','GripVertical'];
+  iconNames.forEach(name => {
+    window['Lucide' + name] = (props) => {
+      const el = lucide[name];
+      if (!el) return null;
+      // Simple SVG renderer via lucide UMD
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      lucide.createIcons({ icons: { [name]: el } });
+      return null;
+    };
+  });
+</script>
+
+<script type="text/babel">
+// ─── Lucide React-compatible wrappers ───────────────────────────────────────
+function LucideIcon({ name, size = 16, style, ...rest }) {
+  const iconDef = lucide[name];
+  if (!iconDef) return null;
+  // lucide UMD format: array of [tagName, attrsObj] tuples
+  const toReactAttrs = (obj) => {
+    const out = {};
+    for (const [k, v] of Object.entries(obj || {})) {
+      const key = k === 'class' ? 'className'
+        : k.includes('-') ? k.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+        : k;
+      out[key] = v;
+    }
+    return out;
+  };
+  const nodes = Array.isArray(iconDef) ? iconDef : [];
+  const children = nodes.map(([tag, attrs], i) =>
+    React.createElement(tag, { key: i, ...toReactAttrs(attrs) })
+  );
+  return React.createElement('svg', {
+    xmlns: 'http://www.w3.org/2000/svg', width: size, height: size,
+    viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+    strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+    style, ...rest,
+  }, ...children);
+}
+
+const LucidePlus         = p => <LucideIcon name="Plus" {...p} />;
+const LucideStar         = p => <LucideIcon name="Star" {...p} />;
+const LucideTrash2       = p => <LucideIcon name="Trash2" {...p} />;
+const LucideMessageSquare= p => <LucideIcon name="MessageSquare" {...p} />;
+const LucideNetwork      = p => <LucideIcon name="Network" {...p} />;
+const LucideSettings     = p => <LucideIcon name="Settings" {...p} />;
+const LucideBot          = p => <LucideIcon name="Bot" {...p} />;
+const LucideUser         = p => <LucideIcon name="User" {...p} />;
+const LucideGitBranch    = p => <LucideIcon name="GitBranch" {...p} />;
+const LucidePencil       = p => <LucideIcon name="Pencil" {...p} />;
+const LucideCopy         = p => <LucideIcon name="Copy" {...p} />;
+const LucideCheck        = p => <LucideIcon name="Check" {...p} />;
+const LucideSend         = p => <LucideIcon name="Send" {...p} />;
+const LucideSquare       = p => <LucideIcon name="Square" {...p} />;
+const LucideX            = p => <LucideIcon name="X" {...p} />;
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
+let _id = 1;
+const uid = () => String(_id++);
+
+function makeMsg(role, content, conversationId, branchId = null, extras = {}) {
+  return { id: uid(), role, content, conversationId, branchId, isStreaming: false, ...extras };
+}
+
+const SEED_CONVS = [
+  {
+    id: 'c1', title: 'Branching strategies', isFavorite: true,
+    messages: [
+      makeMsg('user', 'What are the best strategies for AI conversation branching?', 'c1'),
+      makeMsg('assistant', 'Great question! Here are the key strategies:\n\n**1. Context inheritance** — each branch inherits only messages up to the fork point, keeping context clean.\n\n**2. Selective forking** — let users highlight specific text to branch from, rather than forking the whole conversation.\n\n**3. Branch labeling** — auto-generate a title from the selected text so branches are scannable at a glance.\n\nWhich of these would you like to explore further?', 'c1', null, {
+        branches: [{ id: 'b1', title: 'Context inheritance deep dive', messageCount: 3, anchorText: 'Context inheritance' }]
+      }),
+    ]
+  },
+  {
+    id: 'c2', title: 'API key setup', isFavorite: false,
+    messages: [
+      makeMsg('user', 'How do I set up my OpenAI API key?', 'c2'),
+      makeMsg('assistant', 'Go to **Settings** (top bar), choose OpenAI as your provider, paste your key starting with `sk-`, and click Save. Your key stays in your browser only — nothing is sent to our servers.', 'c2'),
+    ]
+  },
+  {
+    id: 'c3', title: 'What-if scenarios', isFavorite: false,
+    messages: [
+      makeMsg('user', 'Can I use leaf-talk for what-if scenario planning?', 'c3'),
+      makeMsg('assistant', 'Absolutely. The branching feature is ideal for this. Start a main conversation, then branch from any AI response to explore a different direction without losing your original thread.', 'c3'),
+    ]
+  },
+];
+
+const BRANCH_MSGS = {
+  b1: [
+    makeMsg('system', 'The user wants to explore: "Context inheritance"', 'c1', 'b1'),
+    makeMsg('assistant', 'Context inheritance means each branch only receives the messages that existed **before** the fork point. This keeps branches focused and prevents unrelated context from polluting the new thread.\n\nThink of it like a git commit — the branch knows its ancestry, but not what happened on other branches after the split.', 'c1', 'b1'),
+  ]
+};
+
+// ─── Components ─────────────────────────────────────────────────────────────
+
+function Avatar({ role }) {
+  return (
+    <div style={{
+      width: 28, height: 28, borderRadius: 8, flexShrink: 0, marginTop: 2,
+      background: role === 'user' ? 'hsl(142 60% 50% / 0.20)' : 'hsl(220 14% 14%)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      {role === 'user'
+        ? <LucideUser size={14} style={{ color: 'hsl(142 60% 50%)' }} />
+        : <LucideBot size={14} style={{ color: 'hsl(142 60% 50%)' }} />}
+    </div>
+  );
+}
+
+function ThinkingDots() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 0' }}>
+      <span style={{ fontSize: 12, color: 'hsl(220 14% 45%)', marginRight: 2 }}>Thinking</span>
+      {[0,1,2].map(i => (
+        <span key={i} style={{
+          width: 6, height: 6, borderRadius: '50%', background: 'hsl(142 60% 50%)',
+          display: 'inline-block', animation: `thinkDot 1.4s infinite ${i * 0.2}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function ActionBtn({ onClick, title, children }) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <button onClick={onClick} title={title}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        padding: 4, border: 'none', borderRadius: 4, cursor: 'pointer',
+        background: hov ? 'hsl(142 60% 50% / 0.10)' : 'transparent',
+        color: 'hsl(220 14% 45%)', display: 'flex', transition: 'background 150ms',
+      }}>{children}</button>
+  );
+}
+
+function BranchChip({ branch, onClick }) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <div onClick={onClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px',
+        borderRadius: 8, border: '1px solid hsl(142 60% 50% / 0.2)',
+        background: hov ? 'hsl(142 60% 50% / 0.10)' : 'hsl(142 60% 50% / 0.05)',
+        cursor: 'pointer', marginTop: 6, transition: 'background 150ms',
+      }}>
+      <LucideGitBranch size={12} style={{ color: 'hsl(142 60% 50%)', flexShrink: 0 }} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 12, fontWeight: 500, color: 'hsl(142 60% 50%)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{branch.title}</div>
+        <div style={{ fontSize: 10, color: 'hsl(220 14% 45%)' }}>{branch.messageCount} msgs</div>
+      </div>
+      <span style={{ fontSize: 10, color: 'hsl(220 14% 45%)' }}>View →</span>
+    </div>
+  );
+}
+
+function MessageBubble({ message, onBranchOpen }) {
+  const [copied, setCopied] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
+  const isUser = message.role === 'user';
+  const isSystem = message.role === 'system';
+  if (isSystem) return null;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Minimal markdown: bold and inline code
+  const renderContent = (text) => {
+    const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+    return parts.map((p, i) => {
+      if (p.startsWith('**') && p.endsWith('**')) return <strong key={i}>{p.slice(2,-2)}</strong>;
+      if (p.startsWith('`') && p.endsWith('`')) return <code key={i} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, background: 'hsl(220 14% 17%)', padding: '1px 5px', borderRadius: 4 }}>{p.slice(1,-1)}</code>;
+      return p;
+    });
+  };
+
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ display: 'flex', gap: 10, padding: '10px 16px', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
+      {!isUser && <Avatar role="bot" />}
+      <div style={{ display: 'flex', flexDirection: 'column', maxWidth: 640, flex: 1, alignItems: isUser ? 'flex-end' : 'flex-start' }}>
+        <div style={{ position: 'relative' }}>
+          {hovered && !message.isStreaming && (
+            <div style={{
+              position: 'absolute', top: -30, right: 0,
+              display: 'flex', gap: 2, background: 'hsl(220 14% 17%)',
+              border: '1px solid hsl(220 14% 20%)', borderRadius: 8, padding: 3, zIndex: 10,
+            }}>
+              <ActionBtn onClick={handleCopy} title="Copy">
+                {copied ? <LucideCheck size={12} style={{ color: 'hsl(142 60% 50%)' }} /> : <LucideCopy size={12} />}
+              </ActionBtn>
+              <ActionBtn title="Edit"><LucidePencil size={12} /></ActionBtn>
+              {!isUser && (
+                <ActionBtn title="Branch" onClick={() => onBranchOpen && onBranchOpen(message)}>
+                  <LucideGitBranch size={12} />
+                </ActionBtn>
+              )}
+            </div>
+          )}
+          <div style={{
+            borderRadius: 12, padding: '10px 14px', fontSize: 14, lineHeight: 1.6,
+            background: isUser ? 'hsl(142 60% 50% / 0.10)' : 'hsl(220 14% 14%)',
+            border: isUser ? '1px solid hsl(142 60% 50% / 0.20)' : 'none',
+            color: 'hsl(220 14% 92%)', whiteSpace: 'pre-wrap',
+          }}>
+            {message.isStreaming && !message.content ? <ThinkingDots /> : renderContent(message.content)}
+          </div>
+        </div>
+        {(message.branches || []).map(b => (
+          <BranchChip key={b.id} branch={b} onClick={() => onBranchOpen && onBranchOpen(null, b.id)} />
+        ))}
+      </div>
+      {isUser && <Avatar role="user" />}
+    </div>
+  );
+}
+
+function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a message...' }) {
+  const [input, setInput] = React.useState('');
+  const taRef = React.useRef(null);
+  React.useEffect(() => {
+    if (taRef.current) {
+      taRef.current.style.height = 'auto';
+      taRef.current.style.height = Math.min(taRef.current.scrollHeight, 200) + 'px';
+    }
+  }, [input]);
+  const send = () => {
+    const t = input.trim(); if (!t || isLoading) return;
+    onSend(t); setInput('');
+  };
+  const hasInput = input.trim().length > 0;
+  return (
+    <div style={{ borderTop: '1px solid hsl(220 14% 18%)', padding: '12px 16px', flexShrink: 0 }}>
+      <div style={{
+        maxWidth: 768, margin: '0 auto', display: 'flex', alignItems: 'flex-end', gap: 6,
+        background: 'hsl(220 14% 14%)', border: '1px solid hsl(220 14% 18%)', borderRadius: 12, padding: '6px 8px',
+      }}>
+        <textarea ref={taRef} value={input} onChange={e => setInput(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+          placeholder={placeholder} rows={1}
+          style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontSize: 14, color: 'hsl(220 14% 92%)', fontFamily: 'Inter, sans-serif', padding: '4px 6px', lineHeight: 1.5 }}
+        />
+        {isLoading
+          ? <button onClick={onStop} style={{ padding: 7, borderRadius: 8, border: 'none', cursor: 'pointer', background: 'hsl(0 72% 55%)', color: 'hsl(0 0% 98%)', display: 'flex' }}><LucideSquare size={14} /></button>
+          : <button onClick={send} disabled={!hasInput} style={{ padding: 7, borderRadius: 8, border: 'none', cursor: hasInput ? 'pointer' : 'default', background: 'hsl(142 60% 50%)', color: 'hsl(220 14% 6%)', opacity: hasInput ? 1 : 0.3, display: 'flex', transition: 'opacity 150ms' }}><LucideSend size={14} /></button>
+        }
+      </div>
+    </div>
+  );
+}
+
+function Sidebar({ conversations, activeId, onSelect, onCreate, onDelete, onFavorite }) {
+  return (
+    <div style={{ width: 240, background: 'hsl(220 14% 8%)', borderRight: '1px solid hsl(220 14% 15%)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+      <div style={{ padding: '10px 12px', borderBottom: '1px solid hsl(220 14% 15%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'hsl(220 14% 45%)' }}>Conversations</span>
+        <button onClick={onCreate} style={{ padding: 5, borderRadius: 7, border: 'none', background: 'transparent', cursor: 'pointer', color: 'hsl(220 14% 70%)', display: 'flex' }}
+          onMouseEnter={e => e.currentTarget.style.background = 'hsl(220 14% 14%)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+        ><LucidePlus size={14} /></button>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: 6, scrollbarWidth: 'thin', scrollbarColor: 'hsl(220 14% 17%) transparent' }}>
+        {conversations.length === 0 && <p style={{ fontSize: 10, color: 'hsl(220 14% 45%)', textAlign: 'center', padding: '24px 0' }}>No conversations yet</p>}
+        {conversations.map(conv => <SidebarItem key={conv.id} conv={conv} active={conv.id === activeId} onSelect={() => onSelect(conv.id)} onDelete={() => onDelete(conv.id)} onFavorite={() => onFavorite(conv.id)} />)}
+      </div>
+    </div>
+  );
+}
+
+function SidebarItem({ conv, active, onSelect, onDelete, onFavorite }) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <div onClick={onSelect} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
+      display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, cursor: 'pointer', marginBottom: 1,
+      background: active ? 'hsl(220 14% 14%)' : hov ? 'hsl(220 14% 12%)' : 'transparent',
+      color: active ? 'hsl(220 14% 92%)' : 'hsl(220 14% 70%)', transition: 'background 150ms',
+    }}>
+      <LucideMessageSquare size={12} style={{ opacity: 0.5, flexShrink: 0 }} />
+      <span style={{ flex: 1, fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{conv.title}</span>
+      {hov && (
+        <div style={{ display: 'flex', gap: 2 }}>
+          <button onClick={e => { e.stopPropagation(); onFavorite(); }} style={{ padding: 2, border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 3, display: 'flex' }}>
+            <LucideStar size={10} style={{ color: conv.isFavorite ? '#eab308' : 'hsl(220 14% 45%)', fill: conv.isFavorite ? '#eab308' : 'none' }} />
+          </button>
+          <button onClick={e => { e.stopPropagation(); onDelete(); }} style={{ padding: 2, border: 'none', background: 'transparent', cursor: 'pointer', borderRadius: 3, display: 'flex' }}>
+            <LucideTrash2 size={10} style={{ color: 'hsl(220 14% 45%)' }} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TopBar({ activeView, onSetView, provider, model }) {
+  const tabs = [
+    { id: 'chat', icon: LucideMessageSquare, label: 'Chat' },
+    { id: 'tree', icon: LucideNetwork, label: 'Tree' },
+    { id: 'settings', icon: LucideSettings, label: 'Settings' },
+  ];
+  return (
+    <div style={{ height: 44, borderBottom: '1px solid hsl(220 14% 18%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', background: 'hsl(220 14% 11%)', flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: 2 }}>
+        {tabs.map(tab => {
+          const active = tab.id === activeView;
+          return (
+            <button key={tab.id} onClick={() => onSetView(tab.id)} style={{
+              display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
+              fontSize: 12, fontWeight: 500, fontFamily: 'Inter, sans-serif',
+              background: active ? 'hsl(142 60% 50% / 0.10)' : 'transparent',
+              color: active ? 'hsl(142 60% 50%)' : 'hsl(220 14% 45%)',
+              transition: 'background 150ms, color 150ms',
+            }}>
+              <tab.icon size={13} />{tab.label}
+            </button>
+          );
+        })}
+      </div>
+      <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', background: 'hsl(220 14% 14%)', border: '1px solid hsl(220 14% 18%)', padding: '3px 10px', borderRadius: 6, color: 'hsl(220 14% 55%)' }}>
+        {provider} · {model || 'no model'}
+      </span>
+    </div>
+  );
+}
+
+function SettingsView({ settings, onSave }) {
+  const [form, setForm] = React.useState(settings);
+  const providers = [
+    { id: 'openai', label: 'OpenAI' }, { id: 'anthropic', label: 'Anthropic' },
+    { id: 'google', label: 'Google' }, { id: 'custom', label: 'Custom (OpenRouter)' },
+  ];
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
+      <div style={{ maxWidth: 480 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 24 }}>Settings</h2>
+        <SectionLabel>Provider</SectionLabel>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 20 }}>
+          {providers.map(p => (
+            <button key={p.id} onClick={() => set('provider', p.id)} style={{
+              padding: '8px 12px', borderRadius: 8, border: `1px solid ${form.provider === p.id ? 'hsl(142 60% 50% / 0.4)' : 'hsl(220 14% 18%)'}`,
+              background: form.provider === p.id ? 'hsl(142 60% 50% / 0.10)' : 'hsl(220 14% 14%)',
+              color: form.provider === p.id ? 'hsl(142 60% 50%)' : 'hsl(220 14% 70%)',
+              cursor: 'pointer', fontSize: 12, fontFamily: 'Inter, sans-serif', fontWeight: 500, textAlign: 'left', transition: 'all 150ms',
+            }}>{p.label}</button>
+          ))}
+        </div>
+        <SectionLabel>API Key</SectionLabel>
+        <StyledInput type="password" placeholder="sk-..." value={form.apiKey} onChange={v => set('apiKey', v)} style={{ marginBottom: 16 }} />
+        <SectionLabel>Model</SectionLabel>
+        <StyledInput placeholder="gpt-4o" value={form.model} onChange={v => set('model', v)} mono style={{ marginBottom: 20 }} />
+        <button onClick={() => onSave(form)} style={{
+          padding: '8px 20px', borderRadius: 8, border: 'none', background: 'hsl(142 60% 50%)',
+          color: 'hsl(220 14% 6%)', cursor: 'pointer', fontSize: 12, fontWeight: 500, fontFamily: 'Inter, sans-serif',
+        }}>Save Settings</button>
+      </div>
+    </div>
+  );
+}
+
+function SectionLabel({ children }) {
+  return <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'hsl(220 14% 45%)', marginBottom: 8 }}>{children}</div>;
+}
+
+function StyledInput({ type = 'text', placeholder, value, onChange, mono, style }) {
+  return (
+    <input type={type} placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} style={{
+      width: '100%', background: 'hsl(220 14% 14%)', border: '1px solid hsl(220 14% 18%)',
+      borderRadius: 8, padding: '7px 10px', fontSize: 12, color: 'hsl(220 14% 92%)',
+      fontFamily: mono ? 'JetBrains Mono, monospace' : 'Inter, sans-serif',
+      outline: 'none', boxSizing: 'border-box', transition: 'border-color 150ms', ...style,
+    }}
+      onFocus={e => e.target.style.borderColor = 'hsl(142 60% 50% / 0.5)'}
+      onBlur={e => e.target.style.borderColor = 'hsl(220 14% 18%)'}
+    />
+  );
+}
+
+function BranchPanel({ branch, messages, onClose, onSend, isLoading }) {
+  const endRef = React.useRef(null);
+  React.useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: 'smooth' }); }, [messages.length]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'hsl(220 14% 11%)', borderLeft: '1px solid hsl(220 14% 18%)', minWidth: 0 }}>
+      <div style={{ padding: '10px 14px', borderBottom: '1px solid hsl(220 14% 18%)', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <LucideGitBranch size={13} style={{ color: 'hsl(142 60% 50%)' }} />
+        <span style={{ flex: 1, fontSize: 12, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{branch.title}</span>
+        <button onClick={onClose} style={{ padding: 4, border: 'none', background: 'transparent', cursor: 'pointer', color: 'hsl(220 14% 45%)', display: 'flex', borderRadius: 5 }}>
+          <LucideX size={13} />
+        </button>
+      </div>
+      {branch.anchorText && (
+        <div style={{ margin: '10px 14px 0', padding: '7px 10px', borderRadius: 7, background: 'hsl(142 60% 50% / 0.07)', border: '1px solid hsl(142 60% 50% / 0.15)' }}>
+          <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '.05em', textTransform: 'uppercase', color: 'hsl(142 60% 50%)', marginBottom: 3 }}>Branched from</div>
+          <div style={{ fontSize: 12, color: 'hsl(220 14% 70%)', fontStyle: 'italic', lineHeight: 1.4 }}>"{branch.anchorText}"</div>
+        </div>
+      )}
+      <div style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'hsl(220 14% 17%) transparent' }}>
+        {messages.filter(m => m.role !== 'system').map(msg => <MessageBubble key={msg.id} message={msg} />)}
+        <div ref={endRef} />
+      </div>
+      <ChatInput onSend={onSend} isLoading={isLoading} placeholder="Continue this branch..." />
+    </div>
+  );
+}
+
+function TreeView() {
+  return (
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12, background: 'hsl(220 14% 10%)' }}>
+      <LucideNetwork size={32} style={{ color: 'hsl(220 14% 25%)' }} />
+      <p style={{ fontSize: 13, color: 'hsl(220 14% 45%)', margin: 0 }}>Tree View</p>
+      <p style={{ fontSize: 11, color: 'hsl(220 14% 35%)', margin: 0 }}>React Flow visualization — available in the full app</p>
+    </div>
+  );
+}
+
+// ─── AI Simulation ───────────────────────────────────────────────────────────
+const AI_RESPONSES = [
+  "That's an interesting point. Let me break it down:\n\n**Context windows** in AI chat work by passing all prior messages to the model on each request. When you branch, the branch only receives messages up to the fork point — keeping things focused.\n\nWant me to elaborate on any aspect?",
+  "Great question! The key insight here is that **branching preserves context integrity**. Each branch is a clean slate from the fork point forward.\n\nThis means you can explore `what-if` scenarios without polluting your main thread.",
+  "Exactly right. The way leaf-talk handles this is elegant — instead of copying the entire conversation, it just passes a `branchId` reference and reconstructs context on demand.\n\nShall we explore the technical implementation?",
+  "I'd be happy to help with that. Here's what I'd suggest:\n\n1. Start with a clear question in the main thread\n2. Branch from any response that sparks a new direction\n3. Use the Tree View to see the full shape of your exploration",
+];
+let aiIdx = 0;
+
+// ─── App ─────────────────────────────────────────────────────────────────────
+function App() {
+  const [conversations, setConversations] = React.useState(SEED_CONVS);
+  const [activeId, setActiveId] = React.useState('c1');
+  const [activeView, setActiveView] = React.useState('chat');
+  const [activeBranchId, setActiveBranchId] = React.useState(null);
+  const [branchMessages, setBranchMessages] = React.useState(BRANCH_MSGS);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isBranchLoading, setIsBranchLoading] = React.useState(false);
+  const [settings, setSettings] = React.useState({ provider: 'openai', model: 'gpt-4o', apiKey: '', baseUrl: '' });
+  const endRef = React.useRef(null);
+
+  const activeConv = conversations.find(c => c.id === activeId);
+  const messages = activeConv?.messages || [];
+  const activeBranch = activeBranchId
+    ? activeConv?.messages.flatMap(m => m.branches || []).find(b => b.id === activeBranchId)
+    : null;
+  const currentBranchMessages = activeBranchId ? (branchMessages[activeBranchId] || []) : [];
+
+  React.useEffect(() => {
+    if (endRef.current) endRef.current.scrollTop = endRef.current.scrollHeight;
+  }, [messages.length, isLoading]);
+
+  const createConversation = () => {
+    const id = uid();
+    const conv = { id, title: 'New conversation', isFavorite: false, messages: [] };
+    setConversations(cs => [conv, ...cs]);
+    setActiveId(id);
+    setActiveBranchId(null);
+  };
+
+  const deleteConversation = (id) => {
+    setConversations(cs => cs.filter(c => c.id !== id));
+    if (activeId === id) setActiveId(conversations.find(c => c.id !== id)?.id || null);
+  };
+
+  const toggleFavorite = (id) => {
+    setConversations(cs => cs.map(c => c.id === id ? { ...c, isFavorite: !c.isFavorite } : c));
+  };
+
+  const sendMessage = (content) => {
+    if (!activeId) return;
+    const userMsg = makeMsg('user', content, activeId);
+    const aiMsg = makeMsg('assistant', '', activeId, null, { isStreaming: true });
+    setConversations(cs => cs.map(c => c.id === activeId ? { ...c, messages: [...c.messages, userMsg, aiMsg], title: c.messages.length === 0 ? content.slice(0, 40) : c.title } : c));
+    setIsLoading(true);
+    const response = AI_RESPONSES[aiIdx % AI_RESPONSES.length]; aiIdx++;
+    let i = 0;
+    const interval = setInterval(() => {
+      i += 3;
+      const chunk = response.slice(0, i);
+      const done = i >= response.length;
+      setConversations(cs => cs.map(c => c.id === activeId ? {
+        ...c, messages: c.messages.map(m => m.id === aiMsg.id ? { ...m, content: done ? response : chunk, isStreaming: !done } : m)
+      } : c));
+      if (done) { clearInterval(interval); setIsLoading(false); }
+    }, 20);
+  };
+
+  const openBranch = (msg, branchId) => {
+    if (branchId) { setActiveBranchId(branchId); return; }
+    if (!msg) return;
+    const existingBranch = (msg.branches || [])[0];
+    if (existingBranch) { setActiveBranchId(existingBranch.id); return; }
+    const bid = uid();
+    const branch = { id: bid, title: msg.content.slice(0, 50) + '…', messageCount: 1, anchorText: msg.content.slice(0, 80) };
+    setConversations(cs => cs.map(c => c.id === activeId ? {
+      ...c, messages: c.messages.map(m => m.id === msg.id ? { ...m, branches: [...(m.branches || []), branch] } : m)
+    } : c));
+    setBranchMessages(bm => ({ ...bm, [bid]: [makeMsg('assistant', 'Branch started. What would you like to explore from this point?', activeId, bid)] }));
+    setActiveBranchId(bid);
+  };
+
+  const sendBranchMessage = (content) => {
+    if (!activeBranchId) return;
+    const userMsg = makeMsg('user', content, activeId, activeBranchId);
+    const aiMsg = makeMsg('assistant', '', activeId, activeBranchId, { isStreaming: true });
+    setBranchMessages(bm => ({ ...bm, [activeBranchId]: [...(bm[activeBranchId] || []), userMsg, aiMsg] }));
+    setIsBranchLoading(true);
+    const response = AI_RESPONSES[aiIdx % AI_RESPONSES.length]; aiIdx++;
+    let i = 0;
+    const interval = setInterval(() => {
+      i += 3;
+      const chunk = response.slice(0, i);
+      const done = i >= response.length;
+      setBranchMessages(bm => ({ ...bm, [activeBranchId]: (bm[activeBranchId] || []).map(m => m.id === aiMsg.id ? { ...m, content: done ? response : chunk, isStreaming: !done } : m) }));
+      if (done) { clearInterval(interval); setIsBranchLoading(false); }
+    }, 20);
+  };
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+        <Sidebar
+          conversations={conversations} activeId={activeId}
+          onSelect={id => { setActiveId(id); setActiveBranchId(null); }}
+          onCreate={createConversation}
+          onDelete={deleteConversation}
+          onFavorite={toggleFavorite}
+        />
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+          <TopBar activeView={activeView} onSetView={setActiveView} provider={settings.provider} model={settings.model} />
+          <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+            {activeView === 'chat' && (
+              <>
+                {/* Main chat */}
+                <div style={{ flex: activeBranchId ? '0 0 55%' : 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                  <div ref={endRef} style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'thin', scrollbarColor: 'hsl(220 14% 17%) transparent' }}>
+                    {messages.length === 0 && (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', flexDirection: 'column', gap: 10 }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 12, background: 'hsl(142 60% 50%/0.12)', border: '1px solid hsl(142 60% 50%/0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <LucideGitBranch size={20} style={{ color: 'hsl(142 60% 50%)' }} />
+                        </div>
+                        <p style={{ color: 'hsl(220 14% 45%)', fontSize: 14, margin: 0 }}>Start a conversation</p>
+                        <p style={{ color: 'hsl(220 14% 35%)', fontSize: 12, margin: 0 }}>Select any AI response text to branch</p>
+                      </div>
+                    )}
+                    {messages.map(msg => (
+                      <MessageBubble key={msg.id} message={msg} onBranchOpen={openBranch} />
+                    ))}
+                  </div>
+                  <ChatInput onSend={sendMessage} isLoading={isLoading} onStop={() => setIsLoading(false)} />
+                </div>
+                {/* Branch panel */}
+                {activeBranchId && activeBranch && (
+                  <BranchPanel
+                    branch={activeBranch}
+                    messages={currentBranchMessages}
+                    onClose={() => setActiveBranchId(null)}
+                    onSend={sendBranchMessage}
+                    isLoading={isBranchLoading}
+                  />
+                )}
+              </>
+            )}
+            {activeView === 'tree' && <TreeView />}
+            {activeView === 'settings' && <SettingsView settings={settings} onSave={s => { setSettings(s); setActiveView('chat'); }} />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

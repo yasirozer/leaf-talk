@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .token { background: hsl(220 14% 14%); border: 1px solid hsl(220 14% 18%); border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+  .name { font-size: 10px; color: hsl(220 14% 60%); font-family: 'JetBrains Mono', monospace; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); margin-bottom: 8px; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="label">Semantic Tokens</div>
+  <div class="grid">
+    <div class="token"><div class="dot" style="background:hsl(220 14% 92%)"></div><div class="name">text-primary</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 60%)"></div><div class="name">text-secondary</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 45%)"></div><div class="name">text-disabled</div></div>
+    <div class="token"><div class="dot" style="background:hsl(142 60% 50%)"></div><div class="name">text-brand</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 10%)"></div><div class="name">bg-page</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 14%)"></div><div class="name">bg-card</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 17%)"></div><div class="name">bg-raised</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 8%)"></div><div class="name">bg-sidebar</div></div>
+    <div class="token"><div class="dot" style="background:hsl(142 60% 50%)"></div><div class="name">color-brand</div></div>
+    <div class="token"><div class="dot" style="background:hsl(0 72% 55%)"></div><div class="name">color-danger</div></div>
+    <div class="token"><div class="dot" style="background:hsl(142 60% 50% / 0.10); border:1px solid hsl(142 60% 50% / 0.30)"></div><div class="name">user-msg-bg</div></div>
+    <div class="token"><div class="dot" style="background:hsl(220 14% 18%)"></div><div class="name">border</div></div>
+  </div>
+</body></html>

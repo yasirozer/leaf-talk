@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 5px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; border-radius: 8px; border: none; cursor: pointer; padding: 6px 12px; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); margin-bottom: 8px; }
+  svg { display: inline; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="label">Primary</div>
+  <div class="row">
+    <button class="btn" style="background:hsl(142 60% 50%);color:hsl(220 14% 6%)">Send</button>
+    <button class="btn" style="background:hsl(142 60% 50%/0.85);color:hsl(220 14% 6%)">Hover</button>
+    <button class="btn" style="background:hsl(142 60% 50%/0.30);color:hsl(220 14% 45%);cursor:not-allowed">Disabled</button>
+  </div>
+  <div class="label">Ghost / Outline</div>
+  <div class="row">
+    <button class="btn" style="background:transparent;color:hsl(220 14% 92%);border:1px solid hsl(220 14% 18%)">Cancel</button>
+    <button class="btn" style="background:hsl(220 14% 14%);color:hsl(220 14% 92%);border:1px solid hsl(220 14% 18%)">Settings</button>
+    <button class="btn" style="background:hsl(220 14% 17%);color:hsl(220 14% 92%);border:1px solid hsl(220 14% 18%)">Hover</button>
+  </div>
+  <div class="label">Destructive</div>
+  <div class="row">
+    <button class="btn" style="background:hsl(0 72% 55%);color:hsl(0 0% 98%)">Stop</button>
+    <button class="btn" style="background:hsl(0 72% 55%/0.15);color:hsl(0 72% 65%);border:1px solid hsl(0 72% 55%/0.3)">Delete</button>
+  </div>
+  <div class="label">Icon Buttons (p-1.5)</div>
+  <div class="row">
+    <button style="padding:6px;background:transparent;border:none;border-radius:8px;color:hsl(220 14% 55%);cursor:pointer;display:flex;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button style="padding:6px;background:hsl(220 14% 14%);border:none;border-radius:8px;color:hsl(220 14% 92%);cursor:pointer;display:flex;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button style="padding:6px;background:hsl(142 60% 50%/0.10);border:none;border-radius:8px;color:hsl(142 60% 50%);cursor:pointer;display:flex;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    </button>
+    <button style="padding:6px;background:transparent;border:none;border-radius:8px;color:hsl(220 14% 45%);cursor:pointer;display:flex;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+    </button>
+  </div>
+  <div class="label">Tab Buttons</div>
+  <div class="row">
+    <button class="btn" style="background:hsl(142 60% 50%/0.10);color:hsl(142 60% 50%);padding:6px 12px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat
+    </button>
+    <button class="btn" style="background:transparent;color:hsl(220 14% 45%);padding:6px 12px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Tree
+    </button>
+    <button class="btn" style="background:transparent;color:hsl(220 14% 45%);padding:6px 12px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Settings
+    </button>
+  </div>
+</body></html>

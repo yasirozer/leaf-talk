@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; }
+  .block { background: hsl(220 14% 14%); border: 1px solid hsl(220 14% 18%); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); margin-bottom: 6px; }
+  .code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: hsl(220 14% 92%); line-height: 1.6; }
+  .inline-code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: hsl(220 14% 17%); padding: 2px 6px; border-radius: 4px; color: hsl(220 14% 92%); }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; background: hsl(220 14% 17%); border: 1px solid hsl(220 14% 18%); border-radius: 6px; padding: 4px 8px; color: hsl(220 14% 60%); display: inline-block; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="label">JetBrains Mono — Code Block</div>
+  <div class="block">
+    <div class="code"><span style="color:hsl(142 60% 50%)">const</span> branch = <span style="color:hsl(142 60% 65%)">createBranch</span>(messageId, {<br>&nbsp;&nbsp;selectedText: <span style="color:hsl(35 80% 65%)">"explore this idea"</span>,<br>&nbsp;&nbsp;startOffset: 0,<br>});</div>
+  </div>
+  <div class="label">Inline Code</div>
+  <div class="block">
+    <span style="font-size:14px;color:hsl(220 14% 92%)">Set your <span class="inline-code">API_KEY</span> in the settings panel to get started.</span>
+  </div>
+  <div class="label">Provider / Model Tag</div>
+  <div class="block">
+    <span class="tag">OpenAI · gpt-4o</span>&nbsp;&nbsp;<span class="tag">Anthropic · claude-3-5-sonnet</span>
+  </div>
+</body></html>

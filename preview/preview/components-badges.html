@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); margin-bottom: 8px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+  .selection-popup { background: hsl(220 14% 12%); border: 1px solid hsl(220 14% 22%); border-radius: 8px; padding: 4px; display: flex; gap: 2px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+  .pop-btn { padding: 5px 10px; border-radius: 6px; border: none; background: transparent; cursor: pointer; font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 6px; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="label">Branch Reference Chips</div>
+  <div class="row">
+    <div class="chip" style="border:1px solid hsl(142 60% 50%/0.2);background:hsl(142 60% 50%/0.05)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="hsl(142 60% 50%)" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+      <div>
+        <div style="font-size:11px;font-weight:500;color:hsl(142 60% 50%)">alternative approach</div>
+        <div style="font-size:10px;color:hsl(220 14% 45%)">4 msgs</div>
+      </div>
+      <span style="font-size:10px;color:hsl(220 14% 45%);margin-left:4px">View →</span>
+    </div>
+  </div>
+  <div class="label">Selection Popup</div>
+  <div class="row">
+    <div class="selection-popup">
+      <button class="pop-btn" style="color:hsl(142 60% 50%)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        Branch
+      </button>
+      <button class="pop-btn" style="color:hsl(220 14% 60%)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+  </div>
+  <div class="label">Provider / Model Tags</div>
+  <div class="row">
+    <span class="tag" style="background:hsl(220 14% 14%);border:1px solid hsl(220 14% 18%);color:hsl(220 14% 60%)">OpenAI · gpt-4o</span>
+    <span class="tag" style="background:hsl(220 14% 14%);border:1px solid hsl(220 14% 18%);color:hsl(220 14% 60%)">Anthropic · claude-3-5-sonnet</span>
+    <span class="tag" style="background:hsl(220 14% 14%);border:1px solid hsl(220 14% 18%);color:hsl(220 14% 60%)">Custom · OpenRouter</span>
+  </div>
+  <div class="label">Status Badges</div>
+  <div class="row">
+    <span style="font-size:10px;font-style:italic;color:hsl(220 14% 45%)">edited</span>
+    <span style="font-size:10px;color:hsl(220 14% 45%);font-family:'JetBrains Mono',monospace">3:45 pm · 2 msgs</span>
+    <span style="background:hsl(142 60% 50%/0.10);border:1px solid hsl(142 60% 50%/0.25);color:hsl(142 60% 55%);font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500">Active</span>
+  </div>
+</body></html>

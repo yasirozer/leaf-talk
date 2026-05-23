@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 16px; background: hsl(220 14% 10%); font-family: 'Inter', sans-serif; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .section { }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: hsl(220 14% 45%); margin-bottom: 8px; }
+  .radius-row { display: flex; gap: 6px; margin-bottom: 10px; }
+  .radius-box { background: hsl(220 14% 17%); border: 1px solid hsl(220 14% 22%); width: 44px; height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .r-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: hsl(220 14% 60%); }
+  .spacing-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .spacing-bar { background: hsl(142 60% 50% / 0.25); border: 1px solid hsl(142 60% 50% / 0.35); border-radius: 2px; height: 10px; }
+  .spacing-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: hsl(220 14% 55%); min-width: 50px; }
+  .glow-row { display: flex; gap: 10px; margin-bottom: 8px; }
+  .glow-box { width: 80px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+</style>
+</head>
+<body class="lt-base">
+  <div class="grid">
+    <div class="section">
+      <div class="label">Border Radius</div>
+      <div class="radius-row">
+        <div class="radius-box" style="border-radius:6px"><div class="r-val">sm</div><div class="r-val">6px</div></div>
+        <div class="radius-box" style="border-radius:8px"><div class="r-val">md</div><div class="r-val">8px</div></div>
+        <div class="radius-box" style="border-radius:10px"><div class="r-val">lg</div><div class="r-val">10px</div></div>
+        <div class="radius-box" style="border-radius:12px"><div class="r-val">xl</div><div class="r-val">12px</div></div>
+        <div class="radius-box" style="border-radius:9999px"><div class="r-val">full</div><div class="r-val">∞</div></div>
+      </div>
+      <div class="label">Glow Effects</div>
+      <div class="glow-row">
+        <div class="glow-box" style="background:hsl(220 14% 14%);box-shadow:0 0 12px hsl(142 60% 50% / 0.3);color:hsl(142 60% 50%);font-size:10px;border:1px solid hsl(142 60% 50%/0.2)">glow-green</div>
+        <div class="glow-box" style="background:hsl(220 14% 14%);box-shadow:0 0 12px hsl(0 72% 55% / 0.3);color:hsl(0 72% 55%);font-size:10px;border:1px solid hsl(0 72% 55%/0.2)">glow-red</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="label">Spacing Scale (px)</div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:4px"></div><div class="spacing-label">2 · 2px</div></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:8px"></div><div class="spacing-label">2 · 4px</div></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:12px"></div><div class="spacing-label">3 · 6px</div></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:16px"></div><div class="spacing-label">4 · 8px</div></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:24px"></div><div class="spacing-label">6 · 12px</div></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:32px"></div><div class="spacing-label">8 · 16px</div></div>
+      <div class="spacing-row"><div class="spacing-bar" style="width:48px"></div><div class="spacing-label">12 · 24px</div></div>
+    </div>
+  </div>
+</body></html>
