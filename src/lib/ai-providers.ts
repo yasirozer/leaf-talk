@@ -111,10 +111,10 @@ async function streamGoogle(apiKey: string, model: string, messages: Message[], 
   const { system, contents } = messagesToGoogleFormat(messages);
   const body: any = { contents, generationConfig: { maxOutputTokens: 4096 } };
   if (system) body.systemInstruction = { parts: [{ text: system }] };
-  const url = `${PROVIDER_URLS.google}${model}:streamGenerateContent?key=${apiKey}&alt=sse`;
+  const url = `${PROVIDER_URLS.google}${model}:streamGenerateContent?alt=sse`;
   const resp = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
     body: JSON.stringify(body),
     signal,
   });
@@ -157,6 +157,16 @@ export async function streamCompletion(
       case 'google': await streamGoogle(apiKey, model, messages, callbacks, signal); break;
       case 'custom': {
         if (!customBaseUrl) { callbacks.onError('Custom base URL is required'); return; }
+        try {
+          const parsed = new URL(customBaseUrl);
+          if (parsed.protocol !== 'https:') {
+            callbacks.onError('Custom base URL must use HTTPS');
+            return;
+          }
+        } catch {
+          callbacks.onError('Invalid custom base URL');
+          return;
+        }
         await streamCustomOpenAI(apiKey, model, messages, callbacks, signal, customBaseUrl);
         break;
       }

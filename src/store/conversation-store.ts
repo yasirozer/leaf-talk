@@ -2,6 +2,17 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Message, Branch, Conversation, ProviderSettings, Provider, SelectionPopupState } from '@/types';
 
+const API_KEY_SESSION_STORAGE_KEY = 'branchable-ai-api-key';
+function loadSessionApiKey(): string {
+  try { return sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY) || ''; } catch { return ''; }
+}
+function saveSessionApiKey(key: string) {
+  try {
+    if (key) sessionStorage.setItem(API_KEY_SESSION_STORAGE_KEY, key);
+    else sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
+  } catch {}
+}
+
 function uid() {
   return crypto.randomUUID();
 }
@@ -60,7 +71,7 @@ export const useConversationStore = create<ConversationStore>()(
       conversations: [],
       messages: [],
       branches: [],
-      providerSettings: { provider: 'openai' as Provider, apiKey: '', model: 'gpt-4o' },
+      providerSettings: { provider: 'openai' as Provider, apiKey: loadSessionApiKey(), model: 'gpt-4o' },
 
       activeConversationId: null,
       activeBranchId: null,
@@ -138,7 +149,11 @@ export const useConversationStore = create<ConversationStore>()(
       showSelectionPopup: (state) => set({ selectionPopup: { ...state, visible: true } }),
       hideSelectionPopup: () => set(s => ({ selectionPopup: { ...s.selectionPopup, visible: false } })),
 
-      setProviderSettings: (settings) => set(s => ({ providerSettings: { ...s.providerSettings, ...settings } })),
+      setProviderSettings: (settings) => set(s => {
+        const next = { ...s.providerSettings, ...settings };
+        if ('apiKey' in settings) saveSessionApiKey(next.apiKey);
+        return { providerSettings: next };
+      }),
 
       setActiveView: (view) => set({ activeView: view }),
 
@@ -157,8 +172,24 @@ export const useConversationStore = create<ConversationStore>()(
         conversations: state.conversations,
         messages: state.messages,
         branches: state.branches,
-        providerSettings: state.providerSettings,
+        // Exclude apiKey from localStorage; persist only non-sensitive provider settings
+        providerSettings: {
+          provider: state.providerSettings.provider,
+          model: state.providerSettings.model,
+          customBaseUrl: state.providerSettings.customBaseUrl,
+          customModelId: state.providerSettings.customModelId,
+          apiKey: '',
+        },
       }),
+      merge: (persisted: any, current) => {
+        const merged = { ...current, ...(persisted || {}) };
+        merged.providerSettings = {
+          ...current.providerSettings,
+          ...(persisted?.providerSettings || {}),
+          apiKey: loadSessionApiKey(),
+        };
+        return merged;
+      },
     }
   )
 );
