@@ -2,6 +2,7 @@ import { useRef, useState, useCallback } from 'react';
 import { useConversationStore } from '@/store/conversation-store';
 import { streamCompletion } from '@/lib/ai-providers';
 import { Message } from '@/types';
+import { toast } from '@/hooks/use-toast';
 
 export function useChatStream(branchId?: string) {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,9 +10,17 @@ export function useChatStream(branchId?: string) {
   const store = useConversationStore();
 
   const sendMessage = useCallback(async (content: string, contextMessages?: Message[]) => {
-    const { providerSettings, activeConversationId, addMessage, updateMessageContent, setMessageStreaming } = useConversationStore.getState();
-    const convId = activeConversationId;
-    if (!convId || !providerSettings.apiKey) return;
+    const { providerSettings, activeConversationId, addMessage, updateMessageContent, setMessageStreaming, createConversation, setActiveView } = useConversationStore.getState();
+    let convId = activeConversationId;
+    if (!convId) {
+      convId = createConversation();
+    }
+    if (!providerSettings.apiKey) {
+      toast({ title: 'API key required', description: 'Add your API key in Settings to send messages.', variant: 'destructive' });
+      setActiveView('settings');
+      return;
+    }
+
 
     // Add user message
     addMessage({ conversationId: convId, branchId, role: 'user', content });
