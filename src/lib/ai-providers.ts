@@ -157,6 +157,16 @@ export async function streamCompletion(
       case 'google': await streamGoogle(apiKey, model, messages, callbacks, signal); break;
       case 'custom': {
         if (!customBaseUrl) { callbacks.onError('Custom base URL is required'); return; }
+        try {
+          const parsed = new URL(customBaseUrl);
+          if (parsed.protocol !== 'https:') {
+            callbacks.onError('Custom base URL must use HTTPS');
+            return;
+          }
+        } catch {
+          callbacks.onError('Invalid custom base URL');
+          return;
+        }
         await streamCustomOpenAI(apiKey, model, messages, callbacks, signal, customBaseUrl);
         break;
       }
