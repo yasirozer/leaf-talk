@@ -149,7 +149,11 @@ export const useConversationStore = create<ConversationStore>()(
       showSelectionPopup: (state) => set({ selectionPopup: { ...state, visible: true } }),
       hideSelectionPopup: () => set(s => ({ selectionPopup: { ...s.selectionPopup, visible: false } })),
 
-      setProviderSettings: (settings) => set(s => ({ providerSettings: { ...s.providerSettings, ...settings } })),
+      setProviderSettings: (settings) => set(s => {
+        const next = { ...s.providerSettings, ...settings };
+        if ('apiKey' in settings) saveSessionApiKey(next.apiKey);
+        return { providerSettings: next };
+      }),
 
       setActiveView: (view) => set({ activeView: view }),
 
