@@ -180,7 +180,7 @@ export function TreeView() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
         nodesDraggable
         fitView
