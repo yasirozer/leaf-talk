@@ -28,6 +28,7 @@ interface ConversationStore {
   activeConversationId: string | null;
   activeBranchId: string | null;
   branchPanelOpen: boolean;
+  branchPanelFullscreen: boolean;
   selectionPopup: SelectionPopupState;
   activeView: 'chat' | 'tree' | 'settings';
 
@@ -47,6 +48,8 @@ interface ConversationStore {
   createBranch: (conversationId: string, anchor: Branch['anchor']) => string;
   setActiveBranch: (id: string | null) => void;
   closeBranchPanel: () => void;
+  toggleBranchFullscreen: () => void;
+  setBranchFullscreen: (v: boolean) => void;
 
   // Selection popup
   showSelectionPopup: (state: Omit<SelectionPopupState, 'visible'>) => void;
@@ -76,6 +79,7 @@ export const useConversationStore = create<ConversationStore>()(
       activeConversationId: null,
       activeBranchId: null,
       branchPanelOpen: false,
+      branchPanelFullscreen: false,
       selectionPopup: { visible: false, x: 0, y: 0, selectedText: '', messageId: '', startOffset: 0, endOffset: 0 },
       activeView: 'chat',
 
@@ -86,14 +90,20 @@ export const useConversationStore = create<ConversationStore>()(
         return id;
       },
 
-      setActiveConversation: (id) => set({ activeConversationId: id, activeBranchId: null, branchPanelOpen: false, activeView: 'chat' }),
+      setActiveConversation: (id) => set({ activeConversationId: id, activeBranchId: null, branchPanelOpen: false, branchPanelFullscreen: false, activeView: 'chat' }),
 
-      deleteConversation: (id) => set(s => ({
-        conversations: s.conversations.filter(c => c.id !== id),
-        messages: s.messages.filter(m => m.conversationId !== id),
-        branches: s.branches.filter(b => b.conversationId !== id),
-        activeConversationId: s.activeConversationId === id ? null : s.activeConversationId,
-      })),
+      deleteConversation: (id) => set(s => {
+        const isActive = s.activeConversationId === id;
+        return {
+          conversations: s.conversations.filter(c => c.id !== id),
+          messages: s.messages.filter(m => m.conversationId !== id),
+          branches: s.branches.filter(b => b.conversationId !== id),
+          activeConversationId: isActive ? null : s.activeConversationId,
+          activeBranchId: isActive ? null : s.activeBranchId,
+          branchPanelOpen: isActive ? false : s.branchPanelOpen,
+          branchPanelFullscreen: isActive ? false : s.branchPanelFullscreen,
+        };
+      }),
 
       toggleFavorite: (id) => set(s => ({
         conversations: s.conversations.map(c => c.id === id ? { ...c, isFavorite: !c.isFavorite } : c),
@@ -143,8 +153,10 @@ export const useConversationStore = create<ConversationStore>()(
         return id;
       },
 
-      setActiveBranch: (id) => set({ activeBranchId: id, branchPanelOpen: id !== null }),
-      closeBranchPanel: () => set({ branchPanelOpen: false, activeBranchId: null }),
+      setActiveBranch: (id) => set(s => ({ activeBranchId: id, branchPanelOpen: id !== null, branchPanelFullscreen: id === null ? false : s.branchPanelFullscreen })),
+      closeBranchPanel: () => set({ branchPanelOpen: false, activeBranchId: null, branchPanelFullscreen: false }),
+      toggleBranchFullscreen: () => set(s => ({ branchPanelFullscreen: !s.branchPanelFullscreen })),
+      setBranchFullscreen: (v) => set({ branchPanelFullscreen: v }),
 
       showSelectionPopup: (state) => set({ selectionPopup: { ...state, visible: true } }),
       hideSelectionPopup: () => set(s => ({ selectionPopup: { ...s.selectionPopup, visible: false } })),

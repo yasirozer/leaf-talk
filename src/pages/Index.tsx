@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopBar } from '@/components/layout/TopBar';
 import { MainChat } from '@/components/chat/MainChat';
@@ -10,6 +11,24 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 const Index = () => {
   const activeView = useConversationStore(s => s.activeView);
   const branchPanelOpen = useConversationStore(s => s.branchPanelOpen);
+  const branchPanelFullscreen = useConversationStore(s => s.branchPanelFullscreen);
+  const toggleBranchFullscreen = useConversationStore(s => s.toggleBranchFullscreen);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+        if (useConversationStore.getState().branchPanelOpen) {
+          e.preventDefault();
+          toggleBranchFullscreen();
+        }
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [toggleBranchFullscreen]);
+
+  const showBranchSplit = activeView === 'chat' && branchPanelOpen && !branchPanelFullscreen;
+  const showBranchFullscreen = activeView === 'chat' && branchPanelOpen && branchPanelFullscreen;
 
   return (
     <div className="lt-base lt-grain flex h-screen flex-col overflow-hidden">
@@ -24,7 +43,9 @@ const Index = () => {
         >
           <TopBar />
           <div className="flex flex-1 min-h-0">
-            {activeView === 'chat' && branchPanelOpen ? (
+            {showBranchFullscreen ? (
+              <BranchPanel />
+            ) : showBranchSplit ? (
               <ResizablePanelGroup direction="horizontal">
                 <ResizablePanel defaultSize={60} minSize={30}>
                   <MainChat />

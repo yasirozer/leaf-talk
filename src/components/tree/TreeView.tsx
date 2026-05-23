@@ -60,7 +60,7 @@ export function TreeView() {
         id: msg.id,
         type: 'messageNode',
         position: pos,
-        data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: false },
+        data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: false, branchId: null },
       });
       msgIdToNodeId.set(msg.id, msg.id);
       nodePositions.set(msg.id, pos);
@@ -96,7 +96,7 @@ export function TreeView() {
         id: branchNodeId,
         type: 'messageNode',
         position: branchPos,
-        data: { role: 'branch', content: branch.title, isBranch: true },
+        data: { role: 'branch', content: branch.title, isBranch: true, branchId: branch.id },
       });
       nodePositions.set(branchNodeId, branchPos);
 
@@ -119,7 +119,7 @@ export function TreeView() {
           id: bMsgId,
           type: 'messageNode',
           position: msgPos,
-          data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: true },
+          data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: true, branchId: branch.id },
         });
         msgIdToNodeId.set(msg.id, bMsgId);
         nodePositions.set(bMsgId, msgPos);
@@ -155,12 +155,14 @@ export function TreeView() {
     }
   }, [initialNodes, initialEdges, setNodes, setEdges, messages, allBranches]);
 
-  const onNodeClick = useCallback((_: any, node: Node) => {
-    if (node.id.startsWith('branch-')) {
-      const branchId = node.id.replace('branch-', '');
+  const onNodeDoubleClick = useCallback((_: any, node: Node) => {
+    const branchId = (node.data as any)?.branchId as string | null | undefined;
+    if (branchId) {
       store.setActiveBranch(branchId);
-      store.setActiveView('chat');
+    } else {
+      store.setActiveBranch(null);
     }
+    store.setActiveView('chat');
   }, [store]);
 
   if (!convId) {
@@ -178,7 +180,7 @@ export function TreeView() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
         nodeTypes={nodeTypes}
         nodesDraggable
         fitView

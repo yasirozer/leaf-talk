@@ -1,5 +1,5 @@
 import { useConversationStore } from '@/store/conversation-store';
-import { X, GitBranch, Quote } from 'lucide-react';
+import { X, GitBranch, Quote, Maximize2, Minimize2 } from 'lucide-react';
 import { MessageBubble } from '../chat/MessageBubble';
 import { ChatInput } from '../chat/ChatInput';
 import { useChatStream } from '@/hooks/use-chat-stream';
@@ -35,6 +35,14 @@ export function BranchPanel() {
           <h3 className="text-sm font-medium truncate">{branch.title}</h3>
           <span className="text-[10px] text-dim">{new Date(branch.createdAt).toLocaleString()}</span>
         </div>
+        <button
+          type="button"
+          onClick={store.toggleBranchFullscreen}
+          title={store.branchPanelFullscreen ? 'Exit fullscreen (Ctrl/Cmd+B)' : 'Fullscreen (Ctrl/Cmd+B)'}
+          className="rounded-lg p-1.5 text-dim transition-colors hover:bg-[var(--surface-container)] hover:text-[var(--on-surface)]"
+        >
+          {store.branchPanelFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+        </button>
         <button
           type="button"
           onClick={store.closeBranchPanel}
