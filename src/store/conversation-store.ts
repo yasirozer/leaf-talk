@@ -2,6 +2,17 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Message, Branch, Conversation, ProviderSettings, Provider, SelectionPopupState } from '@/types';
 
+const API_KEY_SESSION_STORAGE_KEY = 'branchable-ai-api-key';
+function loadSessionApiKey(): string {
+  try { return sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY) || ''; } catch { return ''; }
+}
+function saveSessionApiKey(key: string) {
+  try {
+    if (key) sessionStorage.setItem(API_KEY_SESSION_STORAGE_KEY, key);
+    else sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
+  } catch {}
+}
+
 function uid() {
   return crypto.randomUUID();
 }
