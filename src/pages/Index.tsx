@@ -12,12 +12,18 @@ const Index = () => {
   const branchPanelOpen = useConversationStore(s => s.branchPanelOpen);
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex flex-1 min-h-0">
+    <div className="lt-base lt-grain flex h-screen flex-col overflow-hidden">
+      <div className="flex min-h-0 flex-1">
         <Sidebar />
-        <div className="flex-1 flex flex-col min-w-0">
+        <div
+          className="flex min-w-0 flex-1 flex-col"
+          style={{
+            background: 'var(--surface)',
+            borderLeft: '1px solid var(--outline-ghost)',
+          }}
+        >
           <TopBar />
-          <div className="flex-1 flex min-h-0">
+          <div className="flex flex-1 min-h-0">
             {activeView === 'chat' && branchPanelOpen ? (
               <ResizablePanelGroup direction="horizontal">
                 <ResizablePanel defaultSize={60} minSize={30}>

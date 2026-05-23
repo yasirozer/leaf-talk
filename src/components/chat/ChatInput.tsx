@@ -34,8 +34,14 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
   };
 
   return (
-    <div className="border-t border-border p-4">
-      <div className="max-w-3xl mx-auto flex items-end gap-2 surface-2 rounded-xl border border-border p-2">
+    <div className="p-4" style={{ borderTop: '1px solid var(--outline-ghost)' }}>
+      <div
+        className="mx-auto flex max-w-3xl items-end gap-2 p-2"
+        style={{
+          background: 'var(--surface-container-low)',
+          borderRadius: 'var(--radius-pill)',
+        }}
+      >
         <textarea
           ref={textareaRef}
           value={input}
@@ -46,14 +52,18 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
           className="flex-1 bg-transparent resize-none text-sm px-2 py-1.5 focus:outline-none placeholder:text-dim scrollbar-thin"
         />
         {isLoading ? (
-          <button onClick={onStop} className="p-2 rounded-lg bg-accent text-accent-foreground hover:opacity-90 transition-opacity flex-shrink-0">
+          <button onClick={onStop} className="flex-shrink-0 rounded-full bg-accent p-2.5 text-accent-foreground transition-opacity hover:opacity-90">
             <Square size={14} />
           </button>
         ) : (
           <button
+            type="button"
             onClick={handleSend}
             disabled={!input.trim()}
-            className="p-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-30 flex-shrink-0"
+            className="flex-shrink-0 rounded-full p-2.5 text-white transition hover:opacity-95 disabled:opacity-30"
+            style={{
+              background: 'linear-gradient(135deg, #c74e00 0%, #9f3d00 100%)',
+            }}
           >
             <Send size={14} />
           </button>

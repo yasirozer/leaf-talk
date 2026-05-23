@@ -29,10 +29,8 @@ export function SettingsView() {
                   provider: p,
                   model: PROVIDER_MODELS[p][0] || '',
                 })}
-                className={`px-4 py-2 rounded-lg text-xs font-medium border transition-all ${
-                  provider === p
-                    ? 'border-primary bg-primary/10 text-primary glow-green'
-                    : 'border-border surface-2 text-dim hover:text-foreground'
+                className={`rounded-lg px-4 py-2 text-xs font-medium transition-all ${
+                  provider === p ? 'chip-active' : 'chip-inactive'
                 }`}
               >
                 {PROVIDER_LABELS[p]}
@@ -52,7 +50,7 @@ export function SettingsView() {
               value={customBaseUrl || ''}
               onChange={e => store.setProviderSettings({ customBaseUrl: e.target.value })}
               placeholder="https://openrouter.ai/api/v1"
-              className="w-full px-3 py-2.5 rounded-lg surface-2 border border-border text-sm font-mono focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-dim"
+              className="input-void w-full rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none"
             />
             <p className="text-[10px] text-dim">Enter the base URL of any OpenAI-compatible API (e.g. OpenRouter, Together, Ollama).</p>
           </div>
@@ -69,14 +67,15 @@ export function SettingsView() {
               value={customModelId || ''}
               onChange={e => store.setProviderSettings({ customModelId: e.target.value, model: e.target.value })}
               placeholder="openai/gpt-4o or anthropic/claude-3.5-sonnet"
-              className="w-full px-3 py-2.5 rounded-lg surface-2 border border-border text-sm font-mono focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-dim"
+              className="input-void w-full rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none"
             />
 
             <a
               href="https://openrouter.ai/models"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[11px] text-primary hover:underline"
+              className="inline-flex items-center gap-1.5 text-[11px] font-medium hover:underline"
+              style={{ color: 'var(--primary-container)' }}
             >
               <ExternalLink size={11} /> Browse all models on OpenRouter
             </a>
@@ -94,10 +93,8 @@ export function SettingsView() {
                 <button
                   key={m}
                   onClick={() => store.setProviderSettings({ model: m })}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all ${
-                    model === m
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border surface-2 text-dim hover:text-foreground'
+                  className={`rounded-lg px-3 py-1.5 font-mono text-xs transition-all ${
+                    model === m ? 'chip-active' : 'chip-inactive'
                   }`}
                 >
                   {m}
@@ -117,7 +114,7 @@ export function SettingsView() {
             value={apiKey}
             onChange={e => store.setProviderSettings({ apiKey: e.target.value })}
             placeholder={isCustom ? 'Enter your API key' : `Enter your ${PROVIDER_LABELS[provider]} API key`}
-            className="w-full px-3 py-2.5 rounded-lg surface-2 border border-border text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-dim"
+            className="input-void w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none"
           />
           <p className="text-[10px] text-dim">Your API key is stored locally in your browser and never sent to our servers.</p>
         </div>

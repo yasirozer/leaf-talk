@@ -6,10 +6,16 @@ export function Sidebar() {
   const conversations = store.conversations;
 
   return (
-    <div className="w-60 border-r border-border flex flex-col h-full bg-sidebar">
-      {/* Header */}
-      <div className="p-3 border-b border-sidebar-border flex items-center justify-between">
-        <span className="text-xs font-semibold tracking-wide uppercase text-dim">Conversations</span>
+    <div
+      className="flex h-full w-60 shrink-0 flex-col rounded-br-[28px]"
+      style={{ background: 'var(--surface-container-low)' }}
+    >
+      {/* Header — same height as TopBar for aligned divider */}
+      <div
+        className="flex h-11 shrink-0 items-center justify-between border-b px-3"
+        style={{ borderColor: 'var(--outline-ghost)' }}
+      >
+        <span className="lt-label text-dim">Conversations</span>
         <button
           onClick={() => store.createConversation()}
           className="p-1.5 rounded-lg hover:bg-sidebar-accent transition-colors"

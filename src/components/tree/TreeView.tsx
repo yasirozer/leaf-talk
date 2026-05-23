@@ -17,7 +17,7 @@ import { GitBranch, MessageSquare } from 'lucide-react';
 
 function MessageNode({ data }: { data: any }) {
   return (
-    <div className={`px-3 py-2 rounded-lg border max-w-[220px] shadow-md cursor-grab active:cursor-grabbing ${data.isBranch ? 'border-primary/40 bg-primary/10' : 'border-border surface-2'}`}>
+    <div className={`px-3 py-2 rounded-lg border max-w-[220px] shadow-md cursor-grab active:cursor-grabbing ${data.isBranch ? 'border-primary/40 bg-primary/10' : 'border-border surface-2 text-on-void'}`}>
       <Handle type="target" position={Position.Top} className="!bg-primary !w-2 !h-2" />
       <div className="flex items-center gap-1.5 mb-1">
         {data.isBranch ? <GitBranch size={10} className="text-primary" /> : <MessageSquare size={10} className="text-dim" />}

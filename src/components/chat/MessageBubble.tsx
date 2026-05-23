@@ -83,16 +83,17 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
   return (
     <div className={`group flex gap-3 px-4 py-4 ${isUser ? 'justify-end' : ''}`}>
       {!isUser && (
-        <div className="flex-shrink-0 w-7 h-7 rounded-lg surface-2 flex items-center justify-center mt-0.5">
-          <Bot size={14} className="text-primary" />
+        <div
+          className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center mt-0.5"
+          style={{ background: 'var(--inverse-surface)', color: 'var(--primary-bright)' }}
+        >
+          <Bot size={14} />
         </div>
       )}
       <div className={`flex flex-col max-w-[720px] ${isUser ? 'items-end' : 'items-start'} flex-1`}>
         <div
-          className={`relative rounded-xl px-4 py-3 ${
-            isUser
-              ? 'bg-primary/10 border border-primary/20'
-              : 'surface-2'
+          className={`relative px-4 py-3 ${
+            isUser ? 'bubble-user' : 'bubble-assistant'
           }`}
         >
           {editing ? (
@@ -201,8 +202,11 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
         )}
       </div>
       {isUser && (
-        <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center mt-0.5">
-          <User size={14} className="text-primary" />
+        <div
+          className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center mt-0.5 text-xs font-bold text-white"
+          style={{ background: 'var(--gradient-primary-strong)' }}
+        >
+          <User size={14} />
         </div>
       )}
     </div>

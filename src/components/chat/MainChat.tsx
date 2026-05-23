@@ -28,16 +28,27 @@ export function MainChat() {
   if (!convId) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4" onClick={handleDismissPopup}>
-        <div className="w-16 h-16 rounded-2xl surface-2 flex items-center justify-center">
-          <MessageSquarePlus size={28} className="text-primary" />
+        <div
+          className="flex h-16 w-16 items-center justify-center rounded-2xl surface-2"
+          style={{ color: 'var(--primary-bright)' }}
+        >
+          <MessageSquarePlus size={28} />
         </div>
         <div className="text-center">
-          <h2 className="text-lg font-semibold mb-1">Branchable AI</h2>
+          <h2 className="lt-title mb-1 text-lg">Leaf Talk</h2>
           <p className="text-sm text-dim max-w-sm">Start a conversation, then select text in any assistant reply to create a branch and explore deeper.</p>
         </div>
         <button
-          onClick={() => store.createConversation()}
-          className="mt-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity glow-green"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            store.createConversation();
+          }}
+          className="mt-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-95"
+          style={{
+            background: 'linear-gradient(135deg, #c74e00 0%, #9f3d00 100%)',
+            boxShadow: '0 8px 20px rgba(159, 61, 0, 0.3)',
+          }}
         >
           New conversation
         </button>

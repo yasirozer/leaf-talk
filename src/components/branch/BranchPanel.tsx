@@ -35,8 +35,12 @@ export function BranchPanel() {
           <h3 className="text-sm font-medium truncate">{branch.title}</h3>
           <span className="text-[10px] text-dim">{new Date(branch.createdAt).toLocaleString()}</span>
         </div>
-        <button onClick={store.closeBranchPanel} className="p-1.5 rounded-lg hover:surface-2 transition-colors">
-          <X size={14} className="text-dim" />
+        <button
+          type="button"
+          onClick={store.closeBranchPanel}
+          className="rounded-lg p-1.5 text-dim transition-colors hover:bg-[var(--surface-container)] hover:text-[var(--on-surface)]"
+        >
+          <X size={14} />
         </button>
       </div>
 

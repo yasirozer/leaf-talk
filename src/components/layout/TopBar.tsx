@@ -13,16 +13,20 @@ export function TopBar() {
   ];
 
   return (
-    <div className="h-11 border-b border-border flex items-center justify-between px-4 surface-1">
+    <div
+      className="flex h-11 shrink-0 items-center justify-between border-b px-4"
+      style={{
+        background: 'var(--surface-container-lowest)',
+        borderColor: 'var(--outline-ghost)',
+      }}
+    >
       <div className="flex items-center gap-1">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => store.setActiveView(tab.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              store.activeView === tab.id
-                ? 'bg-primary/10 text-primary'
-                : 'text-dim hover:text-foreground hover:surface-2'
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+              store.activeView === tab.id ? 'tab-active' : 'tab-inactive'
             }`}
           >
             <tab.icon size={13} />
@@ -31,7 +35,7 @@ export function TopBar() {
         ))}
       </div>
       <div className="flex items-center gap-2 text-[10px] text-dim">
-        <span className="px-2 py-1 rounded-md surface-2 border border-border font-mono truncate max-w-[200px]">
+        <span className="surface-2 text-on-void max-w-[200px] truncate rounded-md border border-border px-2 py-1 font-mono text-[10px]">
           {PROVIDER_LABELS[provider]} · {model || 'no model'}
         </span>
       </div>
