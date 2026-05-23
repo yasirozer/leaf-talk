@@ -155,12 +155,14 @@ export function TreeView() {
     }
   }, [initialNodes, initialEdges, setNodes, setEdges, messages, allBranches]);
 
-  const onNodeClick = useCallback((_: any, node: Node) => {
-    if (node.id.startsWith('branch-')) {
-      const branchId = node.id.replace('branch-', '');
+  const onNodeDoubleClick = useCallback((_: any, node: Node) => {
+    const branchId = (node.data as any)?.branchId as string | null | undefined;
+    if (branchId) {
       store.setActiveBranch(branchId);
-      store.setActiveView('chat');
+    } else {
+      store.setActiveBranch(null);
     }
+    store.setActiveView('chat');
   }, [store]);
 
   if (!convId) {
