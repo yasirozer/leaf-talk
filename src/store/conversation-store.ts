@@ -71,7 +71,7 @@ export const useConversationStore = create<ConversationStore>()(
       conversations: [],
       messages: [],
       branches: [],
-      providerSettings: { provider: 'openai' as Provider, apiKey: '', model: 'gpt-4o' },
+      providerSettings: { provider: 'openai' as Provider, apiKey: loadSessionApiKey(), model: 'gpt-4o' },
 
       activeConversationId: null,
       activeBranchId: null,
