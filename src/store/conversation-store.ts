@@ -28,6 +28,7 @@ interface ConversationStore {
   activeConversationId: string | null;
   activeBranchId: string | null;
   branchPanelOpen: boolean;
+  branchPanelFullscreen: boolean;
   selectionPopup: SelectionPopupState;
   activeView: 'chat' | 'tree' | 'settings';
 
