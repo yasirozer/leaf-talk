@@ -52,7 +52,10 @@ export function SettingsView() {
               placeholder="https://openrouter.ai/api/v1"
               className="input-void w-full rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none"
             />
-            <p className="text-[10px] text-dim">Enter the base URL of any OpenAI-compatible API (e.g. OpenRouter, Together, Ollama).</p>
+            {customBaseUrl && !/^https:\/\//i.test(customBaseUrl) && (
+              <p className="text-[10px] text-accent">⚠ Base URL must start with https:// — http and other schemes are blocked.</p>
+            )}
+            <p className="text-[10px] text-dim">Enter the base URL of any OpenAI-compatible API (e.g. OpenRouter, Together, Ollama). HTTPS only.</p>
           </div>
         )}
 
