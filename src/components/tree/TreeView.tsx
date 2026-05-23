@@ -60,7 +60,7 @@ export function TreeView() {
         id: msg.id,
         type: 'messageNode',
         position: pos,
-        data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: false },
+        data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: false, branchId: null },
       });
       msgIdToNodeId.set(msg.id, msg.id);
       nodePositions.set(msg.id, pos);
