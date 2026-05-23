@@ -1,5 +1,5 @@
 import { useConversationStore } from '@/store/conversation-store';
-import { X, GitBranch, Quote } from 'lucide-react';
+import { X, GitBranch, Quote, Maximize2, Minimize2 } from 'lucide-react';
 import { MessageBubble } from '../chat/MessageBubble';
 import { ChatInput } from '../chat/ChatInput';
 import { useChatStream } from '@/hooks/use-chat-stream';
