@@ -119,7 +119,7 @@ export function TreeView() {
           id: bMsgId,
           type: 'messageNode',
           position: msgPos,
-          data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: true },
+          data: { role: msg.role, content: msg.content.slice(0, 80), isBranch: true, branchId: branch.id },
         });
         msgIdToNodeId.set(msg.id, bMsgId);
         nodePositions.set(bMsgId, msgPos);
