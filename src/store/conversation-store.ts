@@ -79,6 +79,7 @@ export const useConversationStore = create<ConversationStore>()(
       activeConversationId: null,
       activeBranchId: null,
       branchPanelOpen: false,
+      branchPanelFullscreen: false,
       selectionPopup: { visible: false, x: 0, y: 0, selectedText: '', messageId: '', startOffset: 0, endOffset: 0 },
       activeView: 'chat',
 
