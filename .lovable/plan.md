@@ -1,125 +1,41 @@
-## LinkedIn Post Taslağı — Branchable AI Chat
 
-Aşağıda projeyi tanıtmak için 3 farklı versiyon hazırladım. Hepsi LinkedIn'in "ilk 3 satır kuralına" göre yazıldı (kullanıcı "...daha fazla" demeden önce hook görmesi lazım).
+## Problems
 
----
+1. **Silinen konuşma sonrası branch paneli açık kalıyor.** `deleteConversation` sadece `activeConversationId`'yi sıfırlıyor; `branchPanelOpen` ve `activeBranchId` eski değerlerinde kalıyor. Üstelik silinen branch'e mesaj yazıldığında `sendMessage` `activeConversationId === null` olduğu için sessizce çıkıyor → cevap gelmiyor, hata da görünmüyor.
+2. **Tree'de mesaj node'larına tıklayınca bir şey olmuyor.** Sadece `branch-*` node'ları tıklanabilir. İstenen: bir node'a **çift tıklayınca** ilgili chat'e (ana konuşma veya branch) atlamak.
+3. **Branch chat için tam ekran modu yok.** Şu an her zaman split (resizable) görünüyor. İstenen: bir tuş → branch full-screen; tekrar bas → ikisi yan yana.
 
-### Format Önerisi (Genel Yapı)
+## Plan
 
-LinkedIn'de iyi performans gösteren teknik post yapısı:
+### 1. Store fix (`src/store/conversation-store.ts`)
+- `deleteConversation`: silinen konuşma aktifse `activeBranchId: null`, `branchPanelOpen: false`, `branchPanelFullscreen: false` da set et.
+- Yeni state: `branchPanelFullscreen: boolean` (default `false`) + actions `toggleBranchFullscreen()`, `setBranchFullscreen(v)`.
+- `closeBranchPanel` aynı zamanda fullscreen'i kapatsın.
+- `setActiveBranch(null)` çağrılırsa fullscreen sıfırlansın.
+- Persist'e dahil etme (UI state).
 
-```text
-[HOOK]        → 1-2 satırlık merak uyandırıcı açılış
-[PROBLEM]     → Çözdüğün sorunu net anlat
-[ÇÖZÜM]       → Projeyi tanıt (3-5 madde)
-[STACK]       → Teknolojiler (kısa)
-[CTA]         → Link + soru / geri bildirim isteği
-[HASHTAG]     → 3-5 etiket (abartma)
-```
+### 2. Branch full-screen mod (`src/pages/Index.tsx` + `src/components/branch/BranchPanel.tsx`)
+- `Index.tsx`: `branchPanelOpen && branchPanelFullscreen` ise sadece `<BranchPanel />` render et (ResizablePanelGroup'u atla, MainChat gizli).
+- `BranchPanel` header'ına yeni buton: Maximize/Minimize ikonu (lucide `Maximize2` / `Minimize2`), tıklayınca `toggleBranchFullscreen`.
+- Kısayol: `Cmd/Ctrl + B` global listener (Index.tsx içinde `useEffect`) → branch paneli açıkken fullscreen toggle, kapalıysa no-op.
 
-**İpuçları:**
-- Emoji ölçülü kullan (1-2 satırda 1 tane yeter)
-- Cümleler kısa olsun, satır araları boş bırak (mobilde okunabilirlik)
-- Görsel ekle: TreeView ekran görüntüsü veya kısa GIF (en çok etkileşim alır)
-- İlk yorumda link paylaş (LinkedIn algoritması link'li postları daha az gösterir)
+### 3. Tree çift tıklama navigasyon (`src/components/tree/TreeView.tsx`)
+- ReactFlow `onNodeDoubleClick` handler ekle:
+  - `node.id.startsWith('branch-')` → mevcut davranış (branch'i aç, chat view'a geç).
+  - `node.id.startsWith('bmsg-')` → ait olduğu branch'i bul (node `data.branchId` taşıyalım), `setActiveBranch(branchId)` + chat view.
+  - Diğer (ana mesaj) → `setActiveBranch(null)` + chat view (ana konuşmayı göster).
+- Branch ve bmsg node `data`'sına `branchId` ekle ki lookup gerekmesin.
+- Mevcut tek-tık handler'ı kaldır (yanlışlıkla branch açmayı önler) — sadece çift tık ile navigasyon olsun.
 
----
+### 4. (Küçük) sendMessage guard (`src/hooks/use-chat-stream.ts`)
+- `convId` null'sa kullanıcıya görünür şekilde no-op olmak yerine erken `return` aynen, fakat (1) düzeltmesi olunca tetiklenmeyecek. Ekstra değişiklik yapmıyoruz.
 
-### Versiyon 1 — Teknik / Geliştirici Odaklı
+## Etkilenen dosyalar
+- `src/store/conversation-store.ts`
+- `src/pages/Index.tsx`
+- `src/components/branch/BranchPanel.tsx`
+- `src/components/tree/TreeView.tsx`
 
-```text
-ChatGPT'de bir cevabın bir kısmı ilgini çekiyor ama konuyu dağıtmadan o kısmı 
-derinleştirmek istiyorsun. Ne yapıyorsun? Yeni sohbet açıp context'i kopyalıyorsun.
-
-Bu repetitive iş için bir hafta sonu projesi yaptım: Branchable AI Chat.
-
-AI'ın cevabından bir metin seç → "Branch" de → o noktadan bağımsız bir konuşma 
-dalı açılsın. Ana sohbet kirlenmesin, dal sadece fork edildiği ana kadarki 
-context'i miras alsın. İstediğin kadar iç içe dallan.
-
-→ Dalları React Flow ile ağaç olarak görselleştir
-→ OpenAI, Anthropic, Google + tüm OpenRouter modelleri
-→ %100 client-side: API key ve geçmiş sadece tarayıcında, backend yok
-→ Mesaj düzenleme, streaming, favoriler
-→ CIPHER_PROTOCOL teması (terminal estetiği sevenlere)
-
-Stack: Vite + React 18 + TS, Tailwind, shadcn/ui, Zustand (persist), React Flow.
-
-Lovable ile hızlıca prototipledim, kod açık. Deneyip geri bildirim verirseniz 
-sevinirim — özellikle "branch" UX'i nasıl daha iyi olur fikirlerinize açığım.
-
-Link yorumda 👇
-
-#AI #React #TypeScript #OpenSource #BuildInPublic
-```
-
----
-
-### Versiyon 2 — Hikaye / Problem Odaklı (daha "insani")
-
-```text
-Bir AI cevabında 5 farklı konu açılıyor. Hepsini merak ediyorsun ama 
-birini sorduğunda diğerleri unutuluyor.
-
-Bu sinir bozucu döngüden çıkmak için küçük bir araç yaptım.
-
-Branchable AI Chat — herhangi bir cevaptan bir cümle seçip o noktadan 
-yeni bir "dal" açıyorsun. Dal kendi context'ini taşıyor, ana sohbet 
-etkilenmiyor. İstediğin kadar derine inebiliyorsun, sonra ağaç görünümünden 
-tüm haritayı görüyorsun.
-
-Tamamen tarayıcıda çalışıyor — API key'in senin makinende kalıyor, 
-hiçbir yere gönderilmiyor. OpenAI, Claude, Gemini, OpenRouter destekli.
-
-Düşünme şeklim "lineer chat"ten "ağaç" yapısına geçince bambaşka oldu. 
-Belki sizin de işinize yarar.
-
-Repo + demo yorumda.
-
-#AI #ProductDesign #Frontend #IndieHacker
-```
-
----
-
-### Versiyon 3 — Kısa & Vurucu
-
-```text
-ChatGPT'de "şu kısmı detaylandır" demek yerine direkt o cümleyi seçip 
-oradan yeni bir konuşma dalı açabilseydin?
-
-Hafta sonu tam olarak bunu yaptım: Branchable AI Chat.
-
-▸ Mesajdan metin seç → branch aç
-▸ Dal sadece o ana kadarki context'i bilir  
-▸ Sınırsız iç içe dallanma
-▸ React Flow ile ağaç görünümü
-▸ %100 client-side, API key tarayıcıda kalır
-▸ OpenAI / Anthropic / Google / OpenRouter
-
-Stack: React + TS + Tailwind + Zustand + React Flow
-
-Açık kaynak. Link yorumda. Ne düşünürsünüz?
-
-#AI #React #OpenSource
-```
-
----
-
-### Görsel Önerisi
-
-Posta mutlaka görsel ekle. En iyi seçenekler (etki sırasına göre):
-
-1. **15-30 sn ekran kaydı (GIF/MP4)** — bir cevaptan branch açıp ağaca bakma akışı. En yüksek etkileşimi bu alır.
-2. **TreeView ekran görüntüsü** — dallanmış bir konuşmanın görsel haritası. Hemen "ne işe yarıyor" anlaşılır.
-3. **Yan yana 2 ekran** — solda normal chat, sağda branch panel. "Before/after" hissi verir.
-
-### Yayınlama İpuçları
-
-- **Saat:** Salı-Perşembe, 09:00-11:00 (TR saati) en iyi sonucu verir
-- **Link stratejisi:** Repo/demo linkini ana posta değil, **ilk yoruma** koy (algoritma cezası yememek için)
-- **İlk 1 saat kritik:** Postu attıktan sonra arkadaşlarına haber ver, erken etkileşim algoritmayı tetikler
-- **Yorumlara cevap yaz:** İlk 2 saatte gelen yorumlara mutlaka cevap ver
-
----
-
-Hangi versiyonu tercih edersin? Onaylarsan seçtiğin versiyonu README'ye veya `docs/` klasörüne kaydedebilirim, ya da istersen ekran görüntüsü/GIF için TreeView'da örnek bir dallı konuşma oluşturup hazır demo veri seed'leyebilirim.
+## Notlar
+- `BranchingVoidLayout` ayrı bir view; bu plan klasik layout (`Index.tsx`) içindir, çünkü aktif `activeView === 'chat'` akışı oradan geçiyor.
+- Fullscreen state persist EDİLMEYECEK — sayfa yenileyince normal split döner.
