@@ -57,7 +57,7 @@ export function MainChat() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-w-0" onClick={handleDismissPopup}>
+    <div className="h-full w-full flex flex-col min-w-0" onClick={handleDismissPopup}>
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="max-w-3xl mx-auto py-4">
           {messages.length === 0 && (
