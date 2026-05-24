@@ -15,7 +15,7 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 200) + 'px';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 160) + 'px';
     }
   }, [input]);
 
@@ -40,7 +40,7 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
         style={{
           position: 'relative',
           background: 'var(--surface-container-low)',
-          borderRadius: 'var(--radius-pill)',
+          borderRadius: 24,
           border: '1px solid rgba(0,0,0,0.18)',
           boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)',
         }}
