@@ -7,7 +7,7 @@ export function Sidebar() {
 
   return (
     <div
-      className="flex h-full w-60 shrink-0 flex-col rounded-br-[28px]"
+      className="flex h-full w-60 xl:w-72 2xl:w-80 shrink-0 flex-col rounded-br-[28px]"
       style={{ background: 'var(--surface-container-low)' }}
     >
       {/* Header — same height as TopBar for aligned divider */}
