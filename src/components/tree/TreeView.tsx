@@ -105,7 +105,7 @@ export function TreeView() {
           id: `e-${sourceNodeId}-${branchNodeId}`,
           source: sourceNodeId,
           target: branchNodeId,
-          style: { stroke: 'hsl(142, 60%, 50%)', strokeDasharray: '5,5' },
+          style: { stroke: 'hsl(0, 0%, 0%)', strokeDasharray: '5,5', strokeWidth: 1.5 },
           animated: true,
         });
       }

@@ -34,12 +34,14 @@ export function ChatInput({ onSend, onStop, isLoading, placeholder = 'Send a mes
   };
 
   return (
-    <div className="p-4" style={{ borderTop: '1px solid var(--outline-ghost)' }}>
+    <div className="p-4" style={{ borderTop: '1px solid rgba(0,0,0,0.12)' }}>
       <div
         className="mx-auto flex max-w-3xl items-end gap-2 p-2"
         style={{
           background: 'var(--surface-container-low)',
           borderRadius: 'var(--radius-pill)',
+          border: '1px solid rgba(0,0,0,0.18)',
+          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)',
         }}
       >
         <textarea
