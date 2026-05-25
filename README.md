@@ -1,39 +1,56 @@
-# Branchable AI Chat — CIPHER_PROTOCOL_V1.0
+# Leaf Talk — Branchable AI Chat Interface
 
-Dallanabilir (branchable) bir AI sohbet arayüzü. Klasik lineer chat akışının ötesine geçerek, herhangi bir AI cevabının içinden bir metin parçası seçip o noktadan **bağımsız bir konuşma dalı** açmanı sağlar. Her dal yalnızca fork edildiği ana kadarki bağlamı miras alır, böylece ana konuşmayı kirletmeden alternatif fikirleri, "what-if" senaryolarını veya derinlemesine araştırmaları paralel olarak yürütebilirsin.
+Leaf Talk is a client-side AI chat application that allows users to create independent conversation branches from any selected part of an AI response.
 
-Tamamen **client-side** çalışır: API anahtarın ve tüm konuşma geçmişin sadece tarayıcının `localStorage`'ında durur, hiçbir backend'e gönderilmez.
+Instead of following a single linear chat flow, users can highlight a specific part of a response and start a new branch from that point. Each branch inherits only the relevant previous context, making it easier to explore alternative ideas, what-if scenarios, and deeper follow-up discussions without affecting the main conversation.
 
-## ✨ Özellikler
+## Features
 
-- 🌿 **Branching** — Herhangi bir mesajdan metin seç, o noktadan yeni bir dal başlat. Yan panelde açılır, istediğin kadar iç içe dallanabilir.
-- 🌳 **Tree View** — Tüm konuşma ve dallarını React Flow ile görsel bir ağaç olarak gör.
-- 🔌 **Çoklu Provider** — OpenAI, Anthropic, Google ve OpenRouter gibi tüm OpenAI-uyumlu custom endpoint'ler desteklenir.
-- 🔑 **Sıfır Backend** — API key'in ve sohbetlerin tarayıcında kalır, sunucumuza hiçbir şey gitmez.
-- ⌨️ **CIPHER_PROTOCOL Teması** — Yüksek kontrastlı, monospaced, neon yeşil hacker terminal estetiği.
-- 💾 **Kalıcı Depolama** — Zustand + localStorage ile sohbetler oturum boyu korunur, favorilere ekleyebilirsin.
-- ✏️ **Mesaj Düzenleme & Streaming** — Cevaplar token-by-token akar, kendi mesajlarını sonradan düzenleyebilirsin.
+- **Branchable conversations**  
+  Select part of an AI response and create a new independent conversation branch from that exact point.
 
-## 🛠 Teknoloji
+- **Context-aware branches**  
+  Each branch keeps only the conversation history up to the point where it was created.
 
-- **Vite + React 18 + TypeScript**
-- **Tailwind CSS** + **shadcn/ui** (semantic design tokens)
-- **Zustand** (persist middleware ile state)
-- **React Flow** (ağaç görselleştirme)
-- **Lucide Icons**
+- **Visual conversation tree**  
+  View the full conversation structure as an interactive tree using React Flow.
 
-## 🚀 Başlangıç
+- **Multiple AI provider support**  
+  Supports OpenAI, Anthropic, Google, OpenRouter, and OpenAI-compatible custom endpoints.
+
+- **Client-side architecture**  
+  The app runs without a backend. API keys and chat history are stored locally in the browser.
+
+- **Persistent chat storage**  
+  Conversations are saved with Zustand and localStorage.
+
+- **Streaming AI responses**  
+  AI responses are displayed token by token for a real-time chat experience.
+
+- **Editable messages**  
+  Users can edit their own messages after sending them.
+
+- **Terminal-inspired UI**  
+  High-contrast monospaced interface with a hacker-style visual theme.
+
+## Tech Stack
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- Zustand
+- React Flow
+- Lucide Icons
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have Node.js and npm installed.
+
+### Installation
 
 ```bash
 npm install
-npm run dev
-```
-
-Sonra **Settings**'e gidip provider seç ve API key gir. Custom seçersen OpenRouter gibi OpenAI-uyumlu herhangi bir endpoint'i kullanabilirsin.
-
-## 🧠 Nasıl Kullanılır
-
-1. **Yeni Konuşma** — Sidebar'dan başlat, mesajını yaz.
-2. **Dal Aç** — AI cevabında ilgilendiğin bir kısmı seç → çıkan popup'tan "Branch" tuşuna bas.
-3. **Bağlamı Anla** — Açılan dal sadece seçim noktasına kadarki konuşmayı bilir; geri kalan ana konuşma onu etkilemez.
-4. **Ağacı Gör** — Top bar'dan Tree View'a geç, tüm yapının haritasını incele.
