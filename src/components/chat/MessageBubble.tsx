@@ -125,6 +125,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
                 </div>
               ) : (
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
                     code({ className, children, ...props }) {
                       const match = /language-(\w+)/.exec(className || '');
