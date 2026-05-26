@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Message, Branch } from '@/types';
 import { useConversationStore } from '@/store/conversation-store';
 import { GitBranch, Pencil, Copy, Check, User, Bot, MessageSquare } from 'lucide-react';
@@ -124,6 +125,7 @@ export function MessageBubble({ message, branches = [] }: MessageBubbleProps) {
                 </div>
               ) : (
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
                     code({ className, children, ...props }) {
                       const match = /language-(\w+)/.exec(className || '');

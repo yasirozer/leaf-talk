@@ -186,6 +186,24 @@
   @apply underline underline-offset-2;
 }
 
+.prose-chat table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 13px;
+  width: 100%;
+}
+.prose-chat th,
+.prose-chat td {
+  border: 1px solid var(--outline-ghost, rgba(255,255,255,0.15));
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-chat th {
+  background: rgba(255,255,255,0.04);
+  font-weight: 600;
+}
+
 /* User message bubbles — cream surface */
 .bubble-user {
   background: var(--surface-container-low);
