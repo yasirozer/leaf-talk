@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Message, Branch } from '@/types';
 import { useConversationStore } from '@/store/conversation-store';
 import { GitBranch, Pencil, Copy, Check, User, Bot, MessageSquare } from 'lucide-react';
